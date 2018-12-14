@@ -14,6 +14,10 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
 
     Vote findByUser_EmailAndDate(String email, LocalDate date);
 
+    @Override
+    @Transactional
+    Vote save(Vote user);
+
     //TODO не забыть удалить методы
     @Override
     List<Vote> findAll();

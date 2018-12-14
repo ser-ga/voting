@@ -26,6 +26,7 @@ public class VoteRestController {
         voteService.vote(id, SecurityUtil.getAuthUsername()); // TODO  надо прикрутить авторизацию
     }
 
+    //TODO не забыть убрать эти методы
     @GetMapping
     public List<Vote> getAll() {
         return voteService.getAllWithUserAndRestaurant();

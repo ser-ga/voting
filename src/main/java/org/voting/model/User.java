@@ -1,6 +1,7 @@
 package org.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -9,20 +10,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
-
-    @NotBlank
-    @Column(name = "NAME")
-    private String name;
+public class User extends AbstractNamedEntity {
 
     @Email
     @NotBlank
@@ -30,12 +22,13 @@ public class User {
     @Column(name = "EMAIL")
     private String email;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank
     @Size(min = 5, max = 100)
     @Column(name = "PASSWORD")
     private String password;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @NotNull
     @Column(name = "REGISTERED", columnDefinition = "timestamp default now()")
     private Date registered = new Date();
@@ -53,22 +46,6 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OrderBy("date DESC")
     private List<Vote> votes;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getEmail() {
         return email;
@@ -116,19 +93,6 @@ public class User {
 
     public void setVotes(List<Vote> votes) {
         this.votes = votes;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     @Override

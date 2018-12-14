@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.voting.model.Restaurant;
@@ -40,6 +41,7 @@ public class RestaurantRestController {
     }
 
     // добавить ресторан
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "/admin",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity create(@RequestBody Restaurant restaurant) {
         Restaurant created = restaurantRepository.save(restaurant);
@@ -52,6 +54,7 @@ public class RestaurantRestController {
     }
 
     // обновить ресторан
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value = "/admin/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@PathVariable("id") Integer id, @RequestBody Restaurant restaurant) {
@@ -64,6 +67,7 @@ public class RestaurantRestController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/admin/{id}")
     public ResponseEntity delete(@PathVariable("id") Integer id) {
         if (restaurantRepository.removeById(id) == 1) return new ResponseEntity<>(HttpStatus.OK);

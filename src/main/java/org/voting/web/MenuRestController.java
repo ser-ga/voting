@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.voting.model.Dish;
@@ -33,6 +34,7 @@ public class MenuRestController {
     }
 
     // TODO создать меню ресторана, принимает массив блюд
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createMenu(@PathVariable("restaurantId") int restaurantId, @RequestBody List<Dish> dishes) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
@@ -55,6 +57,7 @@ public class MenuRestController {
     }
 
     // TODO обновить меню
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateMenu(@PathVariable("restaurantId") int restaurantId, @RequestBody List<Dish> dishes) {
         if (!dishes.isEmpty()) {

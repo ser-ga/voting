@@ -11,9 +11,9 @@ RESTART WITH 10000;
 
 INSERT INTO USERS (NAME, EMAIL, PASSWORD, REGISTERED, ENABLED)
 VALUES ('Sergey', 'admin@yandex.ru', 'pass', '2018-12-05 21:57:02.836000', true),
-       ('Ann', 'user@ya.ru', 'pass', '2018-12-05 21:57:37.148000', true),
-       ('Ann2', 'user2@ya.ru', 'pass', '2018-12-05 21:57:37.148000', true),
-       ('Ann3', 'user3@ya.ru', 'pass', '2018-12-05 21:57:37.148000', true);
+       ('Ann', 'user@ya.ru', 'pass', '2018-12-05 21:57:37.555000', true),
+       ('Ann2', 'user2@ya.ru', 'pass', '2018-12-06 23:53:01.145600', true),
+       ('Ann3', 'user3@ya.ru', 'pass', '2018-12-08 14:55:17.248000', true);
 
 INSERT INTO ROLES (USER_ID, ROLE)
 VALUES (10000, 'ROLE_ADMIN'),

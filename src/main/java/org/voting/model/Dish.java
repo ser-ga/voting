@@ -5,24 +5,12 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Entity
 @Table(name = "dishes")
-public class Dish {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
-
-    @NotBlank
-    @Size(min = 2, max = 25)
-    @Column(name = "NAME")
-    private String name;
+public class Dish extends AbstractNamedEntity {
 
     @NotNull
     @Column(name = "PRICE", precision=10, scale=2)
@@ -33,22 +21,6 @@ public class Dish {
     @JoinColumn(name = "MENU_ID")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Menu menu;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public BigDecimal getPrice() {
         return price;
@@ -64,19 +36,6 @@ public class Dish {
 
     public void setMenu(Menu menu) {
         this.menu = menu;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Dish dish = (Dish) o;
-        return Objects.equals(id, dish.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     @Override

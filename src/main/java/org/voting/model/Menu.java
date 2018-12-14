@@ -9,15 +9,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "menus")
-public class Menu {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Menu extends AbstractBaseEntity {
 
     @NotNull
     @Column(name = "ADDED")
@@ -34,14 +29,6 @@ public class Menu {
     @JoinColumn(name = "RESTAURANT_ID")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant restaurant;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public LocalDate getAdded() {
         return added;
@@ -73,19 +60,6 @@ public class Menu {
     public Menu(@NotNull LocalDate added,  Restaurant restaurant) {
         this.added = added;
         this.restaurant = restaurant;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Menu menu = (Menu) o;
-        return Objects.equals(id, menu.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     @Override

@@ -13,9 +13,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static org.voting.util.VoteTime.getVoteTime;
+
 @Service
 public class VoteServiceImpl implements VoteService {
-    public static final LocalTime END_VOTING_TIME = LocalTime.of(23, 30);
 
     private final VoteRepository voteRepository;
 
@@ -33,7 +34,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     @Transactional
     public void vote(int restaurantId, String email) {
-        if (LocalTime.now().isBefore(END_VOTING_TIME)) {
+        if (LocalTime.now().isBefore(getVoteTime())) {
             Vote vote = voteRepository.findByUser_EmailAndDate(email, LocalDate.now());
             if (vote == null) {
                 vote = new Vote();
@@ -42,10 +43,11 @@ public class VoteServiceImpl implements VoteService {
             vote.setRestaurant(restaurantRepository.getOne(restaurantId));
             voteRepository.save(vote);
         } else {
-            throw new VotingExpirationException("Time voting expired at 11:00 by server time");
+            throw new VotingExpirationException("Time voting expired at " + getVoteTime() + " by server time");
         }
     }
 
+    //TODO не забыть убрать эти методы
     @Override
     public List<Vote> getAllWithUserAndRestaurant() {
         return voteRepository.getAllWithUserAndRestaurant();

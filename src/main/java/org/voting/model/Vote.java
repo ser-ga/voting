@@ -10,11 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "votes")
-public class Vote {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+public class Vote extends AbstractBaseEntity {
 
     //хранить будем только дату голосования, время 11-00 будем только проверять
     @NotNull
@@ -30,14 +26,6 @@ public class Vote {
     @JoinColumn(name = "RESTAURANT_ID", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant restaurant;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public LocalDate getDate() {
         return date;
