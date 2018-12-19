@@ -13,11 +13,11 @@
         <csrf disabled="true"/>
     </http>
 
-    <beans:bean name="noopEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
+    <beans:bean class="org.springframework.security.crypto.factory.PasswordEncoderFactories" id="passwordEncoder" factory-method="createDelegatingPasswordEncoder"/>
 
     <authentication-manager>
         <authentication-provider>
-            <password-encoder ref="noopEncoder"/>
+            <password-encoder ref="passwordEncoder"/>
 
                         <jdbc-user-service data-source-ref="dataSource"
                                            users-by-username-query="SELECT email, password, enabled FROM users WHERE email = ?"

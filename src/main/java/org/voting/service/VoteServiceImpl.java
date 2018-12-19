@@ -3,7 +3,7 @@ package org.voting.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.voting.exception.VotingExpirationException;
+import org.voting.util.exception.VotingExpirationException;
 import org.voting.model.Vote;
 import org.voting.repository.RestaurantRepository;
 import org.voting.repository.UserRepository;

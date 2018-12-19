@@ -21,9 +21,11 @@ public class VoteRestController {
     }
 
     // проголосовать за ресторан по ID
+    // TODO отдавать исключения в JSON
     @PostMapping("/{id}")
     public void vote(@PathVariable("id") Integer id) {
-        voteService.vote(id, SecurityUtil.getAuthUsername()); // TODO  надо прикрутить авторизацию
+        String username = SecurityUtil.getAuthUsername();
+        voteService.vote(id, username); // TODO  надо прикрутить авторизацию
     }
 
     //TODO не забыть убрать эти методы

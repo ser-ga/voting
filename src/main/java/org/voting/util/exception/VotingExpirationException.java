@@ -1,4 +1,4 @@
-package org.voting.exception;
+package org.voting.util.exception;
 
 public class VotingExpirationException extends RuntimeException {
     public VotingExpirationException(String message) {
