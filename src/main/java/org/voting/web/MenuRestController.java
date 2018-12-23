@@ -1,12 +1,10 @@
 package org.voting.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.voting.model.Dish;
 import org.voting.model.Menu;
 import org.voting.model.Restaurant;
@@ -14,7 +12,6 @@ import org.voting.repository.DishRepository;
 import org.voting.repository.MenuRepository;
 import org.voting.repository.RestaurantRepository;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -36,35 +33,53 @@ public class MenuRestController {
     // TODO создать меню ресторана, принимает массив блюд
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createMenu(@PathVariable("restaurantId") int restaurantId, @RequestBody List<Dish> dishes) {
+    public ResponseEntity createMenu(@PathVariable("restaurantId") int restaurantId,
+                                     @RequestParam(value = "date", required = false) LocalDate date,
+                                     @RequestBody List<Dish> dishes) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        if (restaurant == null) return new ResponseEntity(HttpStatus.NOT_FOUND);
-        Menu created = menuRepository.save(new Menu(LocalDate.now(), restaurant));
+        if (restaurant == null) return ResponseEntity.notFound().build();
+        Menu created = menuRepository.save(new Menu(date == null ? LocalDate.now() : date, restaurant));
         dishes.forEach(e -> {
             e.setMenu(created);
             dishRepository.save(e);
         });
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/rest/menu/{id}") //TODO убрать дублирование URI через константу
-                .buildAndExpand(created.getId()).toUri();
-        return ResponseEntity.created(uriOfNewResource).body(created);
+        return ResponseEntity.ok().body(created);
     }
 
-    // TODO достать актуальное меню по Id ресторана
+    // TODO меню по Id ресторана, по умолчанию достает за сегодня, можно указать параметер date
     @GetMapping(value = "/{restaurantId}")
-    public Menu getActualMenuByRestaurantId(@PathVariable("restaurantId") int restaurantId) {
-        return menuRepository.getByRestaurant_IdAndAdded(restaurantId, LocalDate.now());
+    public ResponseEntity getMenuByRestaurantId(@PathVariable("restaurantId") int restaurantId,
+                                                @RequestParam(value = "date", required = false) LocalDate date) {
+        Menu menu = menuRepository.getByRestaurant_IdAndAdded(restaurantId, date == null ? LocalDate.now() : date);
+        if (menu == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().body(menu);
     }
 
     // TODO обновить меню
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateMenu(@PathVariable("restaurantId") int restaurantId, @RequestBody List<Dish> dishes) {
-        if (!dishes.isEmpty()) {
-            Menu menu = menuRepository.getByRestaurant_IdAndAdded(restaurantId, LocalDate.now());
-            if (menu != null) menuRepository.removeById(menu.getId());
+    public ResponseEntity updateMenu(@PathVariable("restaurantId") int restaurantId,
+                                     @RequestParam(value = "date", required = false) LocalDate date,
+                                     @RequestBody List<Dish> dishes) {
+        Menu menu = menuRepository.getByRestaurant_IdAndAdded(restaurantId, date == null ? LocalDate.now() : date);
+        if (menu != null && !dishes.isEmpty()) {
+            menuRepository.removeById(menu.getId());
+            return createMenu(restaurantId, date, dishes);
         }
-        return createMenu(restaurantId, dishes);
+        return ResponseEntity.unprocessableEntity().build();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping(value = "/{restaurantId}")
+    public void delete(@PathVariable("restaurantId") int restaurantId,
+                       @RequestParam(value = "date", required = false) LocalDate date) {
+        Menu menu = menuRepository.getByRestaurant_IdAndAdded(restaurantId, date == null ? LocalDate.now() : date);
+        if (menu != null) menuRepository.removeById(menu.getId());
+    }
+
+    //TODO не забыть убрать эти методы
+    @GetMapping
+    public List<Menu> getAll() {
+        return menuRepository.findAll();
+    }
 }

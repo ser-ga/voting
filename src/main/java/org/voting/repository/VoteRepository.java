@@ -20,9 +20,8 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
 
     //TODO не забыть удалить методы
     @Override
-    List<Vote> findAll();
-
     @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("FROM Vote")
-    List<Vote> getAllWithUserAndRestaurant();
+    List<Vote> findAll();
+
 }

@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -18,13 +17,11 @@ public class User extends AbstractNamedEntity {
 
     @Email
     @NotBlank
-    @Size(max = 100)
     @Column(name = "EMAIL")
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank
-    @Size(min = 5, max = 100)
     @Column(name = "PASSWORD")
     private String password;
 

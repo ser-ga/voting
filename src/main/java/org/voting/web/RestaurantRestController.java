@@ -42,7 +42,7 @@ public class RestaurantRestController {
 
     // добавить ресторан
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping(value = "/admin",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity create(@RequestBody Restaurant restaurant) {
         Restaurant created = restaurantRepository.save(restaurant);
 
@@ -55,7 +55,7 @@ public class RestaurantRestController {
 
     // обновить ресторан
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping(value = "/admin/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@PathVariable("id") Integer id, @RequestBody Restaurant restaurant) {
         Restaurant stored = restaurantRepository.findById(id).orElse(null);
@@ -68,7 +68,7 @@ public class RestaurantRestController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/admin/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Integer id) {
         if (restaurantRepository.removeById(id) == 1) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(HttpStatus.NOT_FOUND);

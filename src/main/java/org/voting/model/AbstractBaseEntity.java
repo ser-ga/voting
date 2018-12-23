@@ -1,12 +1,13 @@
 package org.voting.model;
 
 import org.hibernate.Hibernate;
+import org.voting.HasId;
 
 import javax.persistence.*;
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public abstract class AbstractBaseEntity {
+public abstract class AbstractBaseEntity implements HasId {
     public static final int START_SEQ = 10000;
 
     @Id

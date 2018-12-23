@@ -19,8 +19,9 @@
 
     <import resource="spring-security.xml"/>
 
-    <bean class="org.voting.util.VoteTime">
-        <constructor-arg value="11:00"/>
+    <bean id="voteTime" class="java.time.LocalTime" factory-method="of">
+        <constructor-arg name="hour" value="1"/>
+        <constructor-arg name="minute" value="00"/>
     </bean>
 
     <context:component-scan base-package="org.voting.web"/>

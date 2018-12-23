@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.voting.util.exception.VotingExpirationException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,9 +21,15 @@ public class ExceptionInfoHandler {
 
     private static Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
-    @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
+    @ResponseStatus(value = HttpStatus.CONFLICT)  //409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public void conflict(HttpServletRequest req, DataIntegrityViolationException e) {
+        logExceptionInfo(req, e);
+    }
+
+    @ResponseStatus(value = HttpStatus.PRECONDITION_FAILED) //412 Предварительное условие не выполнено
+    @ExceptionHandler({VotingExpirationException.class})
+    public void binding(HttpServletRequest req, VotingExpirationException e) {
         logExceptionInfo(req, e);
     }
 
