@@ -10,10 +10,10 @@ ALTER SEQUENCE global_seq
 RESTART WITH 10000;
 
 INSERT INTO USERS (NAME, EMAIL, PASSWORD, REGISTERED, ENABLED)
-VALUES ('Sergey', 'admin@yandex.ru', '{noop}pass', '2018-12-05 21:57:02.836000', true),
-       ('Ann', 'user@ya.ru', '{noop}pass', '2018-12-05 21:57:37.555000', true),
-       ('Ann2', 'user2@ya.ru', '{noop}pass', '2018-12-06 23:53:01.145600', true),
-       ('Ann3', 'user3@ya.ru', '{noop}pass', '2018-12-08 14:55:17.248000', true);
+VALUES ('Sergey', 'admin@yandex.ru', '{noop}pass', '2018-12-05 00:00:00.000000', true),
+       ('Ann', 'user@ya.ru', '{noop}pass', '2018-12-06 00:00:00.000000', true),
+       ('Ann2', 'user2@ya.ru', '{noop}pass', '2018-12-07 00:00:00.000000', true),
+       ('Ann3', 'user3@ya.ru', '{noop}pass', '2018-12-08 00:00:00.000000', true);
 
 INSERT INTO ROLES (USER_ID, ROLE)
 VALUES (10000, 'ROLE_ADMIN'),
@@ -21,13 +21,13 @@ VALUES (10000, 'ROLE_ADMIN'),
        (10002, 'ROLE_USER'),
        (10003, 'ROLE_USER');
 
-INSERT INTO RESTAURANTS (NAME, CITY, DESCRIPTION, ADDED)
-VALUES ('KFC1', 'Москва', 'Куриные бургеры и картошка', '2018-12-05'),
-       ('KFC2', 'Москва', 'Куриные бургеры и картошка', '2018-12-05'),
-       ('KFC3', 'Москва', 'Куриные бургеры и картошка', '2018-12-05'),
-       ('McDs1', 'Москва', 'Бургеры и картошка', '2018-12-05'),
-       ('McDs2', 'Москва', 'Бургеры и картошка', '2018-12-06'),
-       ('McDs3', 'Москва', 'Бургеры и картошка', '2018-12-08');
+INSERT INTO RESTAURANTS (NAME, CITY, DESCRIPTION)
+VALUES ('KFC1', 'Москва', 'Куриные бургеры и картошка'),
+       ('KFC2', 'Москва', 'Куриные бургеры и картошка'),
+       ('KFC3', 'Москва', 'Куриные бургеры и картошка'),
+       ('McDs1', 'Москва', 'Бургеры и картошка'),
+       ('McDs2', 'Москва', 'Бургеры и картошка'),
+       ('McDs3', 'Москва', 'Бургеры и картошка');
 
 INSERT INTO MENUS (ADDED, RESTAURANT_ID)
 VALUES ('2018-12-14', 10007),

@@ -27,6 +27,14 @@ public class Vote extends AbstractBaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant restaurant;
 
+    public Vote(){}
+
+    public Vote(Integer id, User user, Restaurant restaurant) {
+        super(id);
+        this.user = user;
+        this.restaurant = restaurant;
+    }
+
     public LocalDate getDate() {
         return date;
     }

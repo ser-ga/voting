@@ -1,5 +1,7 @@
 package org.voting.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,8 @@ import org.voting.util.SecurityUtil;
 @RestController
 @RequestMapping(value = "/rest/votes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteRestController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(VoteRestController.class);
 
     private VoteService voteService;
 

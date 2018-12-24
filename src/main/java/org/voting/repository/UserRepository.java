@@ -29,6 +29,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     User save(User user);
 
+    @Transactional
+    @Modifying
+    void deleteByEmail(String email);
+
     User getByEmail(String email);
 
 }

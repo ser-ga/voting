@@ -18,7 +18,7 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     @Transactional
     Vote save(Vote user);
 
-    //TODO не забыть удалить методы
+    //TODO нужен в тестах
     @Override
     @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("FROM Vote")

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -90,6 +91,16 @@ public class User extends AbstractNamedEntity {
 
     public void setVotes(List<Vote> votes) {
         this.votes = votes;
+    }
+
+    public User(){}
+
+    public User(Integer id, String name, String email, String password, Date registered, Role role) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
+        this.registered = registered;
+        this.roles = Collections.singleton(role);
     }
 
     @Override

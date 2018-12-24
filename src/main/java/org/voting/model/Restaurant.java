@@ -1,12 +1,14 @@
 package org.voting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "restaurants")
@@ -23,12 +25,25 @@ public class Restaurant extends AbstractNamedEntity {
 
     @NotNull
     @Column(name = "ADDED")
-    private Date added;
+    private LocalDate added  = LocalDate.now();
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OrderBy("added DESC")
     private List<Menu> menus;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    private List<Vote> votes;
+
+    public Restaurant() {
+    }
+
+    public Restaurant(Integer id, String name, String city, String description) {
+        super(id, name);
+        this.city = city;
+        this.description = description;
+    }
 
     public String getCity() {
         return city;
@@ -46,11 +61,11 @@ public class Restaurant extends AbstractNamedEntity {
         this.description = description;
     }
 
-    public Date getAdded() {
+    public LocalDate getAdded() {
         return added;
     }
 
-    public void setAdded(Date added) {
+    public void setAdded(LocalDate added) {
         this.added = added;
     }
 
@@ -60,6 +75,14 @@ public class Restaurant extends AbstractNamedEntity {
 
     public void setMenus(List<Menu> menus) {
         this.menus = menus;
+    }
+
+    public List<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
     }
 
     @Override
@@ -72,5 +95,20 @@ public class Restaurant extends AbstractNamedEntity {
                 ", added=" + added +
                 ", menus=" + menus +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Restaurant that = (Restaurant) o;
+        return Objects.equals(city, that.city) &&
+                Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), city, description);
     }
 }

@@ -1,10 +1,11 @@
 package org.voting.web.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.voting.model.Role;
@@ -24,6 +25,8 @@ import static org.voting.util.ValidationUtil.checkNew;
 public class ProfileRestController {
     static final String REST_URL = "/rest/profile";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProfileRestController.class);
+
     private final UserRepository userRepository;
 
     @Autowired
@@ -38,9 +41,8 @@ public class ProfileRestController {
 
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete(@AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
-        User user = userRepository.getByEmail(authUser.getUsername());
-        userRepository.delete(user);
+    public void delete() {
+        userRepository.deleteByEmail(SecurityUtil.getAuthUsername());
     }
 
     //TODO проверить валидацию
