@@ -33,6 +33,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     void deleteByEmail(String email);
 
+    @EntityGraph(attributePaths = {"roles"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT u FROM User u WHERE u.email=?1")
     User getByEmail(String email);
 
 }

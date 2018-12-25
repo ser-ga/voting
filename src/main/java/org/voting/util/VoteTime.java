@@ -4,9 +4,14 @@ import java.time.LocalTime;
 
 public class VoteTime {
 
+    private static int hour;
+    private static int minute;
+
     private static LocalTime time;
 
-    private VoteTime(int hour, int minute) {
+    private VoteTime(int hh, int mm) {
+        hour = hh;
+        minute = mm;
         time = LocalTime.of(hour, minute);
     }
 
@@ -16,5 +21,9 @@ public class VoteTime {
 
     public static void setTime(LocalTime time) {
         VoteTime.time = time;
+    }
+
+    public static void restore() {
+        time = LocalTime.of(hour, minute);
     }
 }

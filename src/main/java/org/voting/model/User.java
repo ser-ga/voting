@@ -26,6 +26,7 @@ public class User extends AbstractNamedEntity {
     @Column(name = "PASSWORD")
     private String password;
 
+    @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @NotNull
     @Column(name = "REGISTERED", columnDefinition = "timestamp default now()")
@@ -34,6 +35,7 @@ public class User extends AbstractNamedEntity {
     @Column(name = "ENABLED", nullable = false, columnDefinition = "bool default true")
     private boolean enabled = true;
 
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "ROLES", joinColumns = @JoinColumn(name = "USER_ID"))
     @Column(name = "ROLE")

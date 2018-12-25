@@ -51,7 +51,7 @@ public class ProfileRestController {
     public ResponseEntity<User> register(@Valid @RequestBody User user) {
         checkNew(user);
         user.setRoles(Collections.singleton(Role.ROLE_USER));
-        User created = userRepository.save(user);
+        User created = userRepository.saveAndFlush(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

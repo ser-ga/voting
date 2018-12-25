@@ -22,8 +22,8 @@
 
 
     <bean id="voteTime" class="org.voting.util.VoteTime">
-        <constructor-arg name="hour" value="11"/>
-        <constructor-arg name="minute" value="00"/>
+        <constructor-arg name="hh" value="11"/>
+        <constructor-arg name="mm" value="00"/>
     </bean>
 
     <context:component-scan base-package="org.voting.web"/>
@@ -104,7 +104,7 @@
 
     <mvc:default-servlet-handler/>
 
-    <bean class="org.voting.web.json.JacksonObjectMapper" id="objectMapper"/>
+    <bean class="org.voting.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
     <mvc:annotation-driven>
         <mvc:message-converters>

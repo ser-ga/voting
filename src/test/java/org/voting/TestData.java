@@ -1,5 +1,7 @@
 package org.voting;
 
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.voting.model.Restaurant;
 import org.voting.model.Role;
 import org.voting.model.User;
@@ -9,7 +11,7 @@ import org.voting.util.VoteTime;
 import java.time.LocalTime;
 import java.util.Date;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.voting.TestUtil.writeAdditionProps;
 import static org.voting.model.AbstractBaseEntity.START_SEQ;
 
 public class TestData {
@@ -37,15 +39,19 @@ public class TestData {
         return new Vote(VOTE1_ID, USER1, RESTAURANT1);
     }
 
-    public static <T> void assertMatch(T actual, T expected, String... ignoringFields) {
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, ignoringFields);
-    }
-
     public static void expireVoteTime() {
         VoteTime.setTime(LocalTime.now().minusSeconds(1));
     }
 
     public static void increaseVoteTime() {
         VoteTime.setTime(LocalTime.now().plusSeconds(1));
+    }
+
+    public static RequestPostProcessor userHttpBasic(User user) {
+        return SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword().replace("{noop}", ""));
+    }
+
+    public static String jsonWithPassword(User user, String passw) {
+        return writeAdditionProps(user, "password", passw);
     }
 }
