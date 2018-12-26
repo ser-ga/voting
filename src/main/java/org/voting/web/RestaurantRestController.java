@@ -13,16 +13,18 @@ import org.voting.model.Restaurant;
 import org.voting.repository.RestaurantRepository;
 import org.voting.util.exception.IllegalRequestDataException;
 
+import javax.validation.Valid;
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.voting.util.ValidationUtil.assureIdConsistent;
 import static org.voting.util.ValidationUtil.checkNew;
+import static org.voting.web.RestaurantRestController.REST_URL;
 
 @RestController
-@RequestMapping(value = "/rest/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantRestController {
+    static final String REST_URL = "/rest/restaurants";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestaurantRestController.class);
 
@@ -43,7 +45,7 @@ public class RestaurantRestController {
     // достать ресторан по ID с меню на сегодня
     @GetMapping("/{id}")
     public ResponseEntity getById(@PathVariable("id") Integer id) {
-        Restaurant restaurant = restaurantRepository.getByIdWithMenuOfDay(id, LocalDate.now());
+        Restaurant restaurant = restaurantRepository.getByIdWithMenus(id);
         if (restaurant == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Restaurant found for ID " + id);
         return ResponseEntity.ok(restaurant);
     }
@@ -51,11 +53,11 @@ public class RestaurantRestController {
     // добавить ресторан
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity create(@RequestBody Restaurant restaurant) {
+    public ResponseEntity create(@Valid @RequestBody Restaurant restaurant) {
         checkNew(restaurant);
         Restaurant created = restaurantRepository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/rest/restaurants/{id}") //TODO убрать дублирование URI через константу
+                .path(REST_URL + "/{id}") //TODO убрать дублирование URI через константу
                 .buildAndExpand(created.getId()).toUri();
 
         return ResponseEntity.created(uriOfNewResource).body(created);
@@ -65,7 +67,7 @@ public class RestaurantRestController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@PathVariable("id") Integer id, @RequestBody Restaurant restaurant) {
+    public void update(@PathVariable("id") Integer id, @Valid @RequestBody Restaurant restaurant) {
         assureIdConsistent(restaurant, id);
         Restaurant stored = restaurantRepository.findById(id).orElse(null);
         if (stored != null) {

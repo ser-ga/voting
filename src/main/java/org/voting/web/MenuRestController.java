@@ -35,6 +35,7 @@ public class MenuRestController {
         this.dishRepository = dishRepository;
     }
 
+    //TODO попробовать сделать через MenuTo
     // TODO создать меню ресторана, принимает массив блюд
     // TODO подумать как возвращать меню ресторана, возможно нужно вернуть меню ресторана за все дни
     @PreAuthorize("hasRole('ROLE_ADMIN')")

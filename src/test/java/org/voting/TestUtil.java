@@ -7,7 +7,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,12 +17,8 @@ public class TestUtil {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, ignoringFields);
     }
 
-    public static <T> void assertMatch(String[] ignoreFields, Iterable<T> actual, T... expected) {
-        assertMatch(ignoreFields, actual, List.of(expected));
-    }
-
-    public static <T> void assertMatch(String[] ignoreFields, Iterable<T> actual, Iterable<T> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields(ignoreFields).isEqualTo(expected);
+    public static <T> void assertMatch(Iterable<T> actual, Iterable<T> expected, String... ignoringFields) {
+        assertThat(actual).usingElementComparatorIgnoringFields(ignoringFields).isEqualTo(expected);
     }
 
     public static <T> String writeValue(T obj) {
@@ -59,7 +54,8 @@ public class TestUtil {
     }
 
     public static <T> String writeAdditionProps(T obj, Map<String, Object> addProps) {
-        Map<String, Object> map = getMapper().convertValue(obj, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> map = getMapper().convertValue(obj, new TypeReference<Map<String, Object>>() {
+        });
         map.putAll(addProps);
         return writeValue(map);
     }

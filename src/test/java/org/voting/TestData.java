@@ -1,6 +1,9 @@
 package org.voting;
 
+import com.fasterxml.jackson.databind.ObjectReader;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.voting.model.Restaurant;
 import org.voting.model.Role;
@@ -8,11 +11,19 @@ import org.voting.model.User;
 import org.voting.model.Vote;
 import org.voting.util.VoteTime;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.voting.TestUtil.getContent;
 import static org.voting.TestUtil.writeAdditionProps;
 import static org.voting.model.AbstractBaseEntity.START_SEQ;
+import static org.voting.web.json.JacksonObjectMapper.getMapper;
 
 public class TestData {
 
@@ -39,6 +50,16 @@ public class TestData {
         return new Vote(VOTE1_ID, USER1, RESTAURANT1);
     }
 
+    public static Restaurant getRestaurant() {
+        return new Restaurant(null, "Гусли", "Александров", "Ресторан русской кухни");
+    }
+
+    public static List<Restaurant> getAllRestaurants(Restaurant... restaurants) {
+        List<Restaurant> restaurantList = new ArrayList<>(List.of(RESTAURANT1, RESTAURANT2, RESTAURANT3, RESTAURANT4, RESTAURANT5, RESTAURANT6));
+        if (restaurants.length > 0) restaurantList.addAll(Arrays.asList(restaurants));
+        return restaurantList;
+    }
+
     public static void expireVoteTime() {
         VoteTime.setTime(LocalTime.now().minusSeconds(1));
     }
@@ -53,5 +74,22 @@ public class TestData {
 
     public static String jsonWithPassword(User user, String passw) {
         return writeAdditionProps(user, "password", passw);
+    }
+
+    public static <T> ResultMatcher getToMatcher(Iterable<T> expected, Class<T> clazz) {
+        return result -> assertThat(readListFromJsonMvcResult(result, clazz)).isEqualTo(expected);
+    }
+
+    public static <T> List<T> readListFromJsonMvcResult(MvcResult result, Class<T> clazz) throws UnsupportedEncodingException {
+        return readValues(getContent(result), clazz);
+    }
+
+    public static <T> List<T> readValues(String json, Class<T> clazz) {
+        ObjectReader reader = getMapper().readerFor(clazz);
+        try {
+            return reader.<T>readValues(json).readAll();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Invalid read array from JSON:\n'" + json + "'", e);
+        }
     }
 }

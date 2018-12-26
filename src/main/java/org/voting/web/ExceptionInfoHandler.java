@@ -6,6 +6,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,10 +37,17 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY) //422
-    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalRequestDataException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalRequestDataException.class, BindException.class})
     public void binding(HttpServletRequest req, Exception e) {
         logExceptionInfo(req, e, false);
     }
+
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED) //401
+    @ExceptionHandler({AccessDeniedException.class})
+    public void accessDenied(HttpServletRequest req, AccessDeniedException e) {
+        logExceptionInfo(req, e, false);
+    }
+
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) //500
     @ExceptionHandler(Exception.class)

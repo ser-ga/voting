@@ -7,10 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -40,7 +37,7 @@ public class User extends AbstractNamedEntity {
     @CollectionTable(name = "ROLES", joinColumns = @JoinColumn(name = "USER_ID"))
     @Column(name = "ROLE")
     @ElementCollection(fetch = FetchType.LAZY)
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

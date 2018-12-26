@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.voting.repository.RestaurantRepository;
 import org.voting.repository.UserRepository;
 
 import javax.annotation.PostConstruct;
@@ -34,6 +35,9 @@ abstract public class AbstractControllerTest {
 
     @Autowired
     protected UserRepository userRepository;
+
+    @Autowired
+    protected RestaurantRepository restaurantRepository;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
