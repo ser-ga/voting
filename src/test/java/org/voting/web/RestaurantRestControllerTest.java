@@ -65,20 +65,27 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(created)));
-
         Restaurant returned = readFromJsonResultActions(action, Restaurant.class);
         created.setId(returned.getId());
-
         assertMatch(returned, created);
         List<Restaurant> expectList = List.of(RESTAURANT1, RESTAURANT2, RESTAURANT3, RESTAURANT4, RESTAURANT5, RESTAURANT6, created);
         assertMatch(restaurantRepository.findAll(), expectList, "menus", "votes");
     }
 
     @Test
+    void testCreateByUser() throws Exception {
+        Restaurant created = getRestaurant();
+        mockMvc.perform(post(REST_URL)
+                .with(userHttpBasic(USER1))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(writeValue(created)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void testUpdate() throws Exception {
         Restaurant updated = getRestaurant();
         updated.setId(RESTAURANT1_ID);
-
         mockMvc.perform(put(REST_URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(updated))
@@ -97,7 +104,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(updated))
                 .with(userHttpBasic(USER1)))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isForbidden())
                 .andDo(print());
     }
 
@@ -114,7 +121,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     void testDeleteByUser() throws Exception {
         mockMvc.perform(delete(REST_URL + RESTAURANT3.getId())
                 .with(userHttpBasic(USER1)))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isForbidden())
                 .andDo(print());
     }
 
@@ -134,7 +141,6 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     void testUpdateDuplicate() throws Exception {
         Restaurant invalid = new Restaurant(RESTAURANT1_ID, "KFC2", "Москва", "Куриные бургеры и картошка");
-
         mockMvc.perform(put(REST_URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(writeValue(invalid))

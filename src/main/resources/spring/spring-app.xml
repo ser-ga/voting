@@ -91,6 +91,8 @@
     <context:component-scan base-package="org.voting.repository"/>
     <jpa:repositories base-package="org.voting.repository"/>
 
+    <bean class="org.voting.repository.JpaUtil"/>
+
     <!-- enables scanning for @Cacheable annotation -->
     <cache:annotation-driven cache-manager="ehCacheManager"/>
 

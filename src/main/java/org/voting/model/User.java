@@ -2,7 +2,10 @@ package org.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.SafeHtml;
+import org.springframework.util.CollectionUtils;
 import org.voting.View;
 
 import javax.persistence.*;
@@ -11,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "users")
 public class User extends AbstractNamedEntity {
@@ -35,7 +39,6 @@ public class User extends AbstractNamedEntity {
     @Column(name = "ENABLED", nullable = false, columnDefinition = "bool default true")
     private boolean enabled = true;
 
-    @JsonIgnore
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "ROLES", joinColumns = @JoinColumn(name = "USER_ID"))
     @Column(name = "ROLE")
@@ -105,6 +108,23 @@ public class User extends AbstractNamedEntity {
         this.roles = Collections.singleton(role);
     }
 
+    public User(Integer id, String name, String email, String password) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(Integer id, String name, String email, String password, Date registered, Collection<Role> roles) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
+        this.registered = registered;
+        setRoles(roles);
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
+    }
     @Override
     public String toString() {
         return "User{" +

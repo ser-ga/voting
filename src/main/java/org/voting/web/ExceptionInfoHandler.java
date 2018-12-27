@@ -42,7 +42,7 @@ public class ExceptionInfoHandler {
         logExceptionInfo(req, e, false);
     }
 
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED) //401
+    @ResponseStatus(value = HttpStatus.FORBIDDEN) //403
     @ExceptionHandler({AccessDeniedException.class})
     public void accessDenied(HttpServletRequest req, AccessDeniedException e) {
         logExceptionInfo(req, e, false);

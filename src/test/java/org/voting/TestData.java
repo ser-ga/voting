@@ -54,6 +54,10 @@ public class TestData {
         return new Restaurant(null, "Гусли", "Александров", "Ресторан русской кухни");
     }
 
+    public static User getUser() {
+        return new User(USER1_ID, USER1.getName(), USER1.getEmail(), USER1.getPassword(), USER1.getRegistered(), USER1.getRoles());
+    }
+
     public static List<Restaurant> getAllRestaurants(Restaurant... restaurants) {
         List<Restaurant> restaurantList = new ArrayList<>(List.of(RESTAURANT1, RESTAURANT2, RESTAURANT3, RESTAURANT4, RESTAURANT5, RESTAURANT6));
         if (restaurants.length > 0) restaurantList.addAll(Arrays.asList(restaurants));

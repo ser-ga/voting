@@ -20,8 +20,10 @@ import static org.voting.util.ValidationUtil.assureIdConsistent;
 import static org.voting.util.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = "/rest/users", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestController {
+
+    static final String REST_URL = "/rest/admin";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminRestController.class);
 
@@ -68,5 +70,12 @@ public class AdminRestController {
     public void update(@PathVariable("id") int id, @Validated(View.Web.class) @RequestBody User user) {
         assureIdConsistent(user, id);
         userRepository.save(user);
+    }
+
+    @GetMapping(value = "/by")
+    public ResponseEntity getByEmail(@RequestParam("email") String email) {
+        User user = userRepository.getByEmail(email);
+        if (user == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(user);
     }
 }
