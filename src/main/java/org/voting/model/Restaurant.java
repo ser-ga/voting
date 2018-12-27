@@ -2,6 +2,8 @@ package org.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.voting.View;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -21,6 +23,7 @@ public class Restaurant extends AbstractNamedEntity {
 
     @NotBlank
     @Column(name = "DESCRIPTION")
+    @SafeHtml(groups = {View.Web.class})
     private String description; // полное описание
     // ресторан передаем с рейтингом
 

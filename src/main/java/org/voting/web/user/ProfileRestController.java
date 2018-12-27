@@ -6,14 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.voting.View;
 import org.voting.model.Role;
 import org.voting.model.User;
 import org.voting.repository.UserRepository;
 import org.voting.util.SecurityUtil;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collections;
 
@@ -48,7 +49,7 @@ public class ProfileRestController {
     //TODO проверить валидацию
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<User> register(@Valid @RequestBody User user) {
+    public ResponseEntity<User> register(@Validated(View.Web.class) @RequestBody User user) {
         checkNew(user);
         user.setRoles(Collections.singleton(Role.ROLE_USER));
         User created = userRepository.saveAndFlush(user);
@@ -61,7 +62,7 @@ public class ProfileRestController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody User user) {
+    public void update(@Validated(View.Web.class) @RequestBody User user) {
         User stored = userRepository.getByEmail(SecurityUtil.getAuthUsername());
         assureIdConsistent(user, stored.getId());
         stored.setEmail(user.getEmail());

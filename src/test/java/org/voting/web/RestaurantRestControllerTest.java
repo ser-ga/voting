@@ -118,7 +118,6 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .andDo(print());
     }
 
-    //TODO Подключить защиту
     @Test
     void testUpdateHtmlUnsafe() throws Exception {
         Restaurant invalid = new Restaurant(RESTAURANT1_ID, "KFC1", "Москва", "<script>alert(123)</script>");

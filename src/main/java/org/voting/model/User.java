@@ -2,6 +2,8 @@ package org.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.voting.View;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,6 +18,7 @@ public class User extends AbstractNamedEntity {
     @Email
     @NotBlank
     @Column(name = "EMAIL")
+    @SafeHtml(groups = {View.Web.class})
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

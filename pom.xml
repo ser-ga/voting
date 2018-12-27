@@ -42,6 +42,7 @@
         <hibernate.version>5.3.7.Final</hibernate.version>
         <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
         <javax-el.version>3.0.1-b10</javax-el.version>
+        <jsoup.version>1.11.3</jsoup.version>
 
         <!--Tools-->
         <ehcache.version>3.6.1</ehcache.version>
@@ -101,6 +102,11 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>

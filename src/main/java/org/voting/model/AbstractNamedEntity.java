@@ -1,5 +1,8 @@
 package org.voting.model;
 
+import org.hibernate.validator.constraints.SafeHtml;
+import org.voting.View;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
@@ -11,6 +14,7 @@ public abstract class AbstractNamedEntity extends AbstractBaseEntity {
     @NotBlank
     @Size(min = 2, max = 100)
     @Column(name = "NAME", nullable = false)
+    @SafeHtml(groups = {View.Web.class})
     protected String name;
 
     protected AbstractNamedEntity() {
