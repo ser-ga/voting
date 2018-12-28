@@ -8,8 +8,8 @@
 
     <http pattern="/rest/**" use-expressions="true" name="restSecurityFilterChain" create-session="stateless">
         <http-basic/>
+        <intercept-url pattern="/rest/admin" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/rest/admin/**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/rest/profile/register" access="isAnonymous()"/>
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <csrf disabled="true"/>
         <custom-filter after="BASIC_AUTH_FILTER" ref="logFilter" />

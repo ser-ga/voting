@@ -4,6 +4,7 @@ import org.voting.HasId;
 import org.voting.model.Dish;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,6 +17,8 @@ public class MenuTo implements HasId {
 
     @NotNull
     private List<Dish> dishes;
+
+    private LocalDate date;
     
     @Override
     public Integer getId() {
@@ -31,7 +34,7 @@ public class MenuTo implements HasId {
         return restaurantId;
     }
 
-    public void setRestaurantId(int restaurantId) {
+    public void setRestaurantId(Integer restaurantId) {
         this.restaurantId = restaurantId;
     }
 
@@ -41,6 +44,15 @@ public class MenuTo implements HasId {
 
     public void setDishes(List<Dish> dishes) {
         this.dishes = dishes;
+    }
+
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     @Override

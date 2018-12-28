@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Transactional(readOnly = true)
-public interface MenuRepository extends JpaRepository<Menu,Integer> {
+public interface MenuRepository extends JpaRepository<Menu, Integer> {
 
     Menu getByRestaurant_IdAndAdded(int restaurantId, LocalDate date);
 
