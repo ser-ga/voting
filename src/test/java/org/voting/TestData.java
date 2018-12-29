@@ -53,12 +53,15 @@ public class TestData {
     public static final Dish DISH7 = new Dish(DISH1_ID + 6, "1Пицца", BigDecimal.valueOf(279.49));
     public static final Dish DISH8 = new Dish(DISH1_ID + 7, "2Пицца", BigDecimal.valueOf(279.49));
 
+    public static final String FIELD_MENU = "menu";
+
     public static final int MENU1_ID = START_SEQ + 10;
 
     public static final Menu MENU1 = new Menu(MENU1_ID, LocalDate.of(2018, 12, 14), List.of(DISH1, DISH2, DISH3), RESTAURANT3);
     public static final Menu MENU2 = new Menu(MENU1_ID + 1, LocalDate.of(2018, 12, 14), List.of(DISH4, DISH5, DISH6), RESTAURANT4);
     public static final Menu MENU3 = new Menu(MENU1_ID + 2, LocalDate.now(), List.of(DISH7, DISH8), RESTAURANT3);
 
+    public static final String[] FIELDS_RESTAURANT_AND_DISHES = new String[]{"restaurant", "dishes"};
 
     public static final int VOTE1_ID = START_SEQ + 21;
 

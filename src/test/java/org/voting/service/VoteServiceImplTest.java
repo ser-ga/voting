@@ -4,10 +4,6 @@ import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.transaction.annotation.Transactional;
 import org.voting.model.Restaurant;
 import org.voting.model.Vote;
 import org.voting.util.VoteTime;
@@ -19,10 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.voting.TestData.*;
 import static org.voting.TestUtil.assertMatch;
 
-@Transactional
-@SpringJUnitConfig(locations = {"classpath:spring/spring-app.xml"})
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class VoteServiceImplTest {
+
+public class VoteServiceImplTest extends AbstractServiceTest {
 
     @Autowired
     private VoteService service;

@@ -12,7 +12,6 @@ import org.voting.model.Menu;
 import org.voting.service.MenuService;
 import org.voting.to.MenuTo;
 import org.voting.util.ValidationUtil;
-import org.voting.util.exception.IllegalRequestDataException;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.voting.util.MenuUtil.createFromTo;
-import static org.voting.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = MenuRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,7 +35,6 @@ public class MenuRestController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity create(@Validated @RequestBody MenuTo menuTo) {
-        checkNew(menuTo);
         menuTo.getDishes().forEach(ValidationUtil::checkNew);
 
         Menu created = createFromTo(menuTo);
@@ -64,8 +61,6 @@ public class MenuRestController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity update(@Validated @RequestBody MenuTo menuTo) {
-        if (menuTo.getId() == null) throw new IllegalRequestDataException("Menu must be with id");
-
         Menu updated = createFromTo(menuTo);
         Menu menu = menuService.update(updated, menuTo.getRestaurantId());
 
@@ -86,7 +81,7 @@ public class MenuRestController {
                 .collect(Collectors.toList());
     }
 
-    private ResponseEntity checkNotFound(Menu menu){
+    private ResponseEntity checkNotFound(Menu menu) {
         if (menu == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok().body(menu);
     }

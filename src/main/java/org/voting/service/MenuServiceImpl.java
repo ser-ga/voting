@@ -11,10 +11,14 @@ import org.voting.repository.DishRepository;
 import org.voting.repository.MenuRepository;
 import org.voting.repository.RestaurantRepository;
 import org.voting.util.exception.IllegalRequestDataException;
+import org.voting.util.exception.NotFoundException;
 import org.voting.web.MenuRestController;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static org.voting.util.ValidationUtil.checkNew;
+import static org.voting.util.ValidationUtil.checkNotFound;
 
 @Service
 @Transactional(readOnly = true)
@@ -36,18 +40,18 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional
     public Menu create(Menu menu, int restaurantId) {
-
+        checkNew(menu);
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        if (restaurant != null) {
-            menu.setRestaurant(restaurant);
-            Menu created = menuRepository.saveAndFlush(menu);
-            menu.getDishes().forEach(e -> {
-                e.setMenu(created);
-                dishRepository.save(e);
-            });
-            return created;
-        }
-        return null;
+        checkNotFound(restaurant, "Not found restaurant with id=" + restaurantId);
+
+        menu.setRestaurant(restaurant);
+        Menu created = menuRepository.saveAndFlush(menu);
+        menu.getDishes().forEach(e -> {
+            e.setMenu(created);
+            dishRepository.save(e);
+        });
+        return created;
+
     }
 
     @Override
@@ -63,20 +67,23 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional
     public Menu update(Menu menu, int restaurantId) {
+        if (menu.getId() == null) throw new IllegalRequestDataException("Menu must be with id");
+
         Menu stored = menuRepository.findById(menu.getId()).orElse(null);
+        checkNotFound(stored, "Not found menu with id=" + menu.getId());
         if (stored != null && !menu.getDishes().isEmpty()) {
-            if (menuRepository.delete(menu.getId()) == 1) {
+            if (menuRepository.delete(menu.getId()) == 1) { //TODO может не нужно данное условие
                 menu.setId(null);
                 return create(menu, restaurantId);
             }
         }
-        throw new IllegalRequestDataException("Not update menu for restaurantId=" + restaurantId);
+        return null;
     }
 
     @Override
     @Transactional
     public void delete(int id) {
-        menuRepository.removeById(id);
+        if (menuRepository.delete(id) == 0) throw new NotFoundException("Not found menu with id=" + id);
     }
 
     @Override

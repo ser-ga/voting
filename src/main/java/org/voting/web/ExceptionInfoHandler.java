@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.voting.util.exception.IllegalRequestDataException;
+import org.voting.util.exception.NotFoundException;
 import org.voting.util.exception.VotingExpirationException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +38,7 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY) //422
-    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalRequestDataException.class, BindException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalRequestDataException.class, BindException.class, NotFoundException.class})
     public void binding(HttpServletRequest req, Exception e) {
         logExceptionInfo(req, e, false);
     }
