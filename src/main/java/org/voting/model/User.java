@@ -98,7 +98,8 @@ public class User extends AbstractNamedEntity {
         this.votes = votes;
     }
 
-    public User(){}
+    public User() {
+    }
 
     public User(Integer id, String name, String email, String password, Date registered, Role role) {
         super(id, name);
@@ -125,6 +126,7 @@ public class User extends AbstractNamedEntity {
     public void setRoles(Collection<Role> roles) {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
+
     @Override
     public String toString() {
         return "User{" +

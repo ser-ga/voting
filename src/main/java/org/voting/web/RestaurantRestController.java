@@ -1,7 +1,5 @@
 package org.voting.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,14 +18,11 @@ import java.util.List;
 
 import static org.voting.util.ValidationUtil.assureIdConsistent;
 import static org.voting.util.ValidationUtil.checkNew;
-import static org.voting.web.RestaurantRestController.REST_URL;
 
 @RestController
-@RequestMapping(value = REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = RestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantRestController {
-    static final String REST_URL = "/rest/restaurants";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(RestaurantRestController.class);
+    static final String REST_URL = "/rest/restaurant";
 
     private final RestaurantRepository restaurantRepository;
 

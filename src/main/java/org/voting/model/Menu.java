@@ -57,18 +57,23 @@ public class Menu extends AbstractBaseEntity {
     public Menu() {
     }
 
-    public Menu(@NotNull LocalDate added,  Restaurant restaurant) {
+    public Menu(LocalDate added, Restaurant restaurant) {
         this.added = added;
+        this.restaurant = restaurant;
+    }
+
+    public Menu(Integer id, LocalDate added, List<Dish> dishes, Restaurant restaurant) {
+        super(id);
+        this.added = added;
+        this.dishes = dishes;
         this.restaurant = restaurant;
     }
 
     @Override
     public String toString() {
         return "Menu{" +
-                "id=" + id +
-                ", added=" + added +
-                ", dishes=" + dishes +
-                ", restaurant=" + restaurant +
+                "added=" + added +
+                ", id=" + id +
                 '}';
     }
 }

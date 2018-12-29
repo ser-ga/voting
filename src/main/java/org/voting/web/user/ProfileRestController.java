@@ -1,7 +1,5 @@
 package org.voting.web.user;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,11 +20,9 @@ import static org.voting.util.ValidationUtil.assureIdConsistent;
 import static org.voting.util.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(ProfileRestController.REST_URL)
+@RequestMapping(value = ProfileRestController.REST_URL)
 public class ProfileRestController {
     static final String REST_URL = "/rest/profile";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProfileRestController.class);
 
     private final UserRepository userRepository;
 

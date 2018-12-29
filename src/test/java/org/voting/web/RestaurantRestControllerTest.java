@@ -2,11 +2,13 @@ package org.voting.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.voting.model.Restaurant;
+import org.voting.repository.RestaurantRepository;
 
 import java.util.List;
 
@@ -19,6 +21,9 @@ import static org.voting.TestUtil.*;
 
 class RestaurantRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = RestaurantRestController.REST_URL + '/';
+
+    @Autowired
+    protected RestaurantRepository restaurantRepository;
 
     @BeforeEach
     void setUp() {

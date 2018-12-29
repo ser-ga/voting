@@ -5,19 +5,17 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import org.voting.model.Restaurant;
-import org.voting.model.Role;
-import org.voting.model.User;
-import org.voting.model.Vote;
+import org.voting.model.*;
+import org.voting.to.MenuTo;
 import org.voting.util.VoteTime;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.voting.TestUtil.getContent;
@@ -44,7 +42,25 @@ public class TestData {
     public static final Restaurant RESTAURANT5 = new Restaurant(RESTAURANT1_ID + 4, "McDs2", "Москва", "Бургеры и картошка");
     public static final Restaurant RESTAURANT6 = new Restaurant(RESTAURANT1_ID + 5, "McDs3", "Москва", "Бургеры и картошка");
 
-    public static final int VOTE1_ID = START_SEQ + 18;
+    public static final int DISH1_ID = START_SEQ + 13;
+
+    public static final Dish DISH1 = new Dish(DISH1_ID, "1Картошка", BigDecimal.valueOf(70.15));
+    public static final Dish DISH2 = new Dish(DISH1_ID + 1, "2Бургер куриный", BigDecimal.valueOf(80.55));
+    public static final Dish DISH3 = new Dish(DISH1_ID + 2, "3Салат", BigDecimal.valueOf(100.35));
+    public static final Dish DISH4 = new Dish(DISH1_ID + 3, "1Картошка", BigDecimal.valueOf(72.55));
+    public static final Dish DISH5 = new Dish(DISH1_ID + 4, "2Чизбургер", BigDecimal.valueOf(75.99));
+    public static final Dish DISH6 = new Dish(DISH1_ID + 5, "3Бургер", BigDecimal.valueOf(79.49));
+    public static final Dish DISH7 = new Dish(DISH1_ID + 6, "1Пицца", BigDecimal.valueOf(279.49));
+    public static final Dish DISH8 = new Dish(DISH1_ID + 7, "2Пицца", BigDecimal.valueOf(279.49));
+
+    public static final int MENU1_ID = START_SEQ + 10;
+
+    public static final Menu MENU1 = new Menu(MENU1_ID, LocalDate.of(2018, 12, 14), List.of(DISH1, DISH2, DISH3), RESTAURANT3);
+    public static final Menu MENU2 = new Menu(MENU1_ID + 1, LocalDate.of(2018, 12, 14), List.of(DISH4, DISH5, DISH6), RESTAURANT4);
+    public static final Menu MENU3 = new Menu(MENU1_ID + 2, LocalDate.now(), List.of(DISH7, DISH8), RESTAURANT3);
+
+
+    public static final int VOTE1_ID = START_SEQ + 21;
 
     public static Vote getVote() {
         return new Vote(VOTE1_ID, USER1, RESTAURANT1);
@@ -62,6 +78,31 @@ public class TestData {
         List<Restaurant> restaurantList = new ArrayList<>(List.of(RESTAURANT1, RESTAURANT2, RESTAURANT3, RESTAURANT4, RESTAURANT5, RESTAURANT6));
         if (restaurants.length > 0) restaurantList.addAll(Arrays.asList(restaurants));
         return restaurantList;
+    }
+
+    public static List<Menu> getAllMenus(Menu... menus) {
+        List<Menu> menuList = new ArrayList<>((List.of(MENU1, MENU2, MENU3)));
+        if (menus.length > 0) menuList.addAll(Arrays.asList(menus));
+        return menuList;
+    }
+
+    public static List<MenuTo> getAllMenuTo() {
+        return List.of(MENU1, MENU2, MENU3).stream()
+                .map(MenuTo::fromMenu)
+                .collect(Collectors.toList());
+    }
+
+    public static List<MenuTo> getAllMenuTo(Collection<Menu> menus) {
+        if (menus != null) {
+            return menus.stream()
+                    .map(MenuTo::fromMenu)
+                    .collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    public static List<Dish> getNewDishes() {
+        return List.of(new Dish("Ролл1", BigDecimal.valueOf(150)), new Dish("Ролл2", BigDecimal.valueOf(150)));
     }
 
     public static void expireVoteTime() {

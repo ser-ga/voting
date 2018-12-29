@@ -93,18 +93,6 @@ public class Restaurant extends AbstractNamedEntity {
     }
 
     @Override
-    public String toString() {
-        return "Restaurant{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", description='" + description + '\'' +
-                ", added=" + added +
-                ", menus=" + menus +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -117,5 +105,16 @@ public class Restaurant extends AbstractNamedEntity {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), city, description);
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                "city='" + city + '\'' +
+                ", description='" + description + '\'' +
+                ", added=" + added +
+                '}';
     }
 }

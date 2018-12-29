@@ -1,7 +1,5 @@
 package org.voting.web.user;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,8 +22,6 @@ import static org.voting.util.ValidationUtil.checkNew;
 public class AdminRestController {
 
     static final String REST_URL = "/rest/admin";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminRestController.class);
 
     private final UserRepository userRepository;
 
