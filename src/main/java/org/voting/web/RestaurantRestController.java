@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.voting.View;
 import org.voting.model.Restaurant;
-import org.voting.repository.RestaurantRepository;
+import org.voting.repository.restaurant.RestaurantRepository;
 import org.voting.util.exception.IllegalRequestDataException;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
-import static org.voting.util.ValidationUtil.assureIdConsistent;
-import static org.voting.util.ValidationUtil.checkNew;
+import static org.voting.util.ValidationUtil.*;
 
 @RestController
 @RequestMapping(value = RestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,8 +41,8 @@ public class RestaurantRestController {
     // достать ресторан по ID с меню на сегодня
     @GetMapping("/{id}")
     public ResponseEntity getById(@PathVariable("id") Integer id) {
-        Restaurant restaurant = restaurantRepository.getByIdWithMenus(id);
-        if (restaurant == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Restaurant found for ID " + id);
+        Restaurant restaurant = restaurantRepository.getByIdWithMenus(id, LocalDate.now());
+        checkNotFound(restaurant, "No Restaurant found for ID " + id);
         return ResponseEntity.ok(restaurant);
     }
 
@@ -82,9 +82,6 @@ public class RestaurantRestController {
         if (restaurantRepository.removeById(id) == 1) return new ResponseEntity<>(HttpStatus.OK);
         else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-
-
 
 
 }

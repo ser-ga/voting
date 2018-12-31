@@ -1,10 +1,8 @@
 package org.voting.service;
 
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.voting.model.Restaurant;
 import org.voting.model.Vote;
 import org.voting.util.VoteTime;
 import org.voting.util.exception.VotingExpirationException;
@@ -31,10 +29,8 @@ public class VoteServiceImplTest extends AbstractServiceTest {
         increaseVoteTime();
         service.vote(RESTAURANT1_ID, USER1.getEmail());
         Vote stored = service.findByUser_EmailAndDate(USER1.getEmail(), LocalDate.now());
-        //TODO т.к. разделяем транзакцию с сервисом, юзера получаем готового, а ресторан в виде прокси обертки
-        Restaurant restaurant = (Restaurant) Hibernate.unproxy(stored.getRestaurant());
         assertMatch(stored, getVote(), "user", "restaurant");
-        assertMatch(restaurant, RESTAURANT1, "menus", "votes");
+        assertMatch(stored.getRestaurant(), RESTAURANT1, "menus", "votes");
         assertMatch(stored.getUser(), USER1, "registered", "votes");
     }
 

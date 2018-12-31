@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -27,6 +28,7 @@ public class User extends AbstractNamedEntity {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank
+    @Size(min = 5, max = 100)
     @Column(name = "PASSWORD")
     private String password;
 

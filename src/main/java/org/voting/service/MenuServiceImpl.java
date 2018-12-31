@@ -9,7 +9,7 @@ import org.voting.model.Menu;
 import org.voting.model.Restaurant;
 import org.voting.repository.DishRepository;
 import org.voting.repository.MenuRepository;
-import org.voting.repository.RestaurantRepository;
+import org.voting.repository.restaurant.RestaurantRepository;
 import org.voting.util.exception.IllegalRequestDataException;
 import org.voting.util.exception.NotFoundException;
 import org.voting.web.MenuRestController;

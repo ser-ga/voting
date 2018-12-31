@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -16,6 +17,7 @@ import org.voting.util.SecurityUtil;
 import java.net.URI;
 import java.util.Collections;
 
+import static org.voting.util.UserUtil.prepareToSave;
 import static org.voting.util.ValidationUtil.assureIdConsistent;
 import static org.voting.util.ValidationUtil.checkNew;
 
@@ -26,9 +28,12 @@ public class ProfileRestController {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public ProfileRestController(UserRepository userRepository) {
+    public ProfileRestController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -47,6 +52,7 @@ public class ProfileRestController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<User> register(@Validated(View.Web.class) @RequestBody User user) {
         checkNew(user);
+        prepareToSave(user, passwordEncoder);
         user.setRoles(Collections.singleton(Role.ROLE_USER));
         User created = userRepository.saveAndFlush(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -61,6 +67,7 @@ public class ProfileRestController {
     public void update(@Validated(View.Web.class) @RequestBody User user) {
         User stored = userRepository.getByEmail(SecurityUtil.getAuthUsername());
         assureIdConsistent(user, stored.getId());
+        prepareToSave(user, passwordEncoder);
         stored.setEmail(user.getEmail());
         stored.setPassword(user.getPassword());
         stored.setName(user.getName());

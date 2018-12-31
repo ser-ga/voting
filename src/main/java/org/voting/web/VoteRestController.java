@@ -10,8 +10,11 @@ import org.voting.service.VoteService;
 import org.voting.util.SecurityUtil;
 
 @RestController
-@RequestMapping(value = "/rest/vote", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = VoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteRestController {
+
+    static final String REST_URL = "/rest/vote";
+
 
     private VoteService voteService;
 

@@ -64,7 +64,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
         created.setId(returned.getId());
         assertMatch(returned, created, "registered", "votes", "roles");
         created.setRoles(Set.of(ROLE_USER));
-        assertMatch(userRepository.getByEmail("newemail@ya.ru"), created, "registered", "votes");
+        assertMatch(userRepository.getByEmail("newemail@ya.ru"), created, "password","registered", "votes");
     }
 
     @Test
@@ -75,7 +75,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .content(jsonWithPassword(updated, "newPassword")))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertMatch(userRepository.getByEmail("newemail@ya.ru"), updated, "registered", "votes", "roles");
+        assertMatch(userRepository.getByEmail("newemail@ya.ru"), updated, "registered", "votes", "roles", "password");
     }
 
     @Test

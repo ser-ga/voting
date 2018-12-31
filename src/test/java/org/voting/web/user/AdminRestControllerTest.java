@@ -80,7 +80,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
         assertMatch(returned, expected, "password", "registered", "votes");
         List<User> expectedList = List.of(ADMIN, USER1, USER2, USER3, expected);
-        assertMatch(userRepository.findAll(), expectedList, "registered", "votes");
+        assertMatch(userRepository.findAll(), expectedList, "password", "registered", "votes");
     }
 
     @Test
@@ -125,6 +125,6 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .content(jsonWithPassword(updated, USER1.getPassword())))
                 .andExpect(status().isNoContent());
 
-        assertMatch(userRepository.findById(USER1_ID).orElse(null), updated, "registered", "votes");
+        assertMatch(userRepository.findById(USER1_ID).orElse(null), updated, "password", "registered", "votes");
     }
 }

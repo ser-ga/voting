@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -14,6 +15,7 @@ import org.voting.repository.UserRepository;
 import java.net.URI;
 import java.util.List;
 
+import static org.voting.util.UserUtil.prepareToSave;
 import static org.voting.util.ValidationUtil.assureIdConsistent;
 import static org.voting.util.ValidationUtil.checkNew;
 
@@ -25,9 +27,12 @@ public class AdminRestController {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public AdminRestController(UserRepository userRepository) {
+    public AdminRestController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/{id}")
@@ -47,6 +52,7 @@ public class AdminRestController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> create(@Validated(View.Web.class) @RequestBody User user) {
         checkNew(user);
+        prepareToSave(user, passwordEncoder);
         User created = userRepository.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/rest/users/{id}")
@@ -65,6 +71,7 @@ public class AdminRestController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@PathVariable("id") int id, @Validated(View.Web.class) @RequestBody User user) {
         assureIdConsistent(user, id);
+        prepareToSave(user, passwordEncoder);
         userRepository.save(user);
     }
 

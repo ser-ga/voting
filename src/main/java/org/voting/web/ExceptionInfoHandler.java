@@ -17,6 +17,7 @@ import org.voting.util.exception.IllegalRequestDataException;
 import org.voting.util.exception.NotFoundException;
 import org.voting.util.exception.VotingExpirationException;
 
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice(annotations = RestController.class)
@@ -43,12 +44,17 @@ public class ExceptionInfoHandler {
         logExceptionInfo(req, e, false);
     }
 
+    @ResponseStatus(value = HttpStatus.NOT_FOUND) //404
+    @ExceptionHandler({NoResultException.class})
+    public void noResult(HttpServletRequest req, NoResultException e) {
+        logExceptionInfo(req, e, false);
+    }
+
     @ResponseStatus(value = HttpStatus.FORBIDDEN) //403
     @ExceptionHandler({AccessDeniedException.class})
     public void accessDenied(HttpServletRequest req, AccessDeniedException e) {
         logExceptionInfo(req, e, false);
     }
-
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) //500
     @ExceptionHandler(Exception.class)

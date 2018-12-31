@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Filter;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.voting.View;
 
@@ -37,6 +38,7 @@ public class Restaurant extends AbstractNamedEntity {
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OrderBy("added DESC")
+    @Filter(name="added", condition = "added = :added")
     private List<Menu> menus = new ArrayList<>();
 
     @JsonIgnore

@@ -2,8 +2,10 @@ package org.voting.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "menus")
+@FilterDef(name="added", parameters=@ParamDef(name="added",type="java.time.LocalDate"))
 public class Menu extends AbstractBaseEntity {
 
     @NotNull

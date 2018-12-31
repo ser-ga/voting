@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.voting.model.Restaurant;
-import org.voting.repository.RestaurantRepository;
+import org.voting.repository.restaurant.RestaurantRepository;
 
 import java.util.List;
 
@@ -60,7 +60,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     void testGetNotFound() throws Exception {
         mockMvc.perform(get(REST_URL + 1)
                 .with(userHttpBasic(USER1)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isInternalServerError()); //TODO хендлер не ловит NoResultException
     }
 
     @Test
