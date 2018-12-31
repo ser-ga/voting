@@ -23,7 +23,7 @@ import static org.voting.util.ValidationUtil.checkNew;
 @RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestController {
 
-    static final String REST_URL = "/rest/admin";
+    static final String REST_URL = "/rest/users";
 
     private final UserRepository userRepository;
 
@@ -55,7 +55,7 @@ public class AdminRestController {
         prepareToSave(user, passwordEncoder);
         User created = userRepository.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/rest/users/{id}")
+                .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

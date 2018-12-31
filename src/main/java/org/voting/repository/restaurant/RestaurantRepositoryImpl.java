@@ -10,13 +10,13 @@ import javax.persistence.Query;
 import java.time.LocalDate;
 
 //http://qaru.site/questions/2181737/spring-data-left-join-fetch-query-returning-null
-@Transactional
+@Transactional(readOnly = true)
 public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
     @PersistenceContext
     EntityManager entityManager;
 
     @Override
-    public Restaurant getByIdWithMenus(int id, LocalDate date) {
+    public Restaurant getByIdWithMenuByDate(int id, LocalDate date) {
         Session session = entityManager.unwrap(Session.class);
         session.enableFilter("added").setParameter("added", date);
         Query query = entityManager.createQuery(

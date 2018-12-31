@@ -5,5 +5,5 @@ import org.voting.model.Restaurant;
 import java.time.LocalDate;
 
 public interface RestaurantRepositoryCustom {
-    Restaurant getByIdWithMenus(int id, LocalDate date);
+    Restaurant getByIdWithMenuByDate(int id, LocalDate date);
 }

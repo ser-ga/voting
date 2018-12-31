@@ -22,7 +22,7 @@ import static org.voting.util.ValidationUtil.*;
 @RestController
 @RequestMapping(value = RestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantRestController {
-    static final String REST_URL = "/rest/restaurant";
+    static final String REST_URL = "/rest/restaurants";
 
     private final RestaurantRepository restaurantRepository;
 
@@ -41,7 +41,7 @@ public class RestaurantRestController {
     // достать ресторан по ID с меню на сегодня
     @GetMapping("/{id}")
     public ResponseEntity getById(@PathVariable("id") Integer id) {
-        Restaurant restaurant = restaurantRepository.getByIdWithMenus(id, LocalDate.now());
+        Restaurant restaurant = restaurantRepository.getByIdWithMenuByDate(id, LocalDate.now());
         checkNotFound(restaurant, "No Restaurant found for ID " + id);
         return ResponseEntity.ok(restaurant);
     }

@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
@@ -23,6 +22,7 @@ public class Restaurant extends AbstractNamedEntity {
 
     @NotBlank
     @Column(name = "CITY")
+    @SafeHtml(groups = {View.Web.class})
     private String city;
 
     @NotBlank
@@ -92,21 +92,6 @@ public class Restaurant extends AbstractNamedEntity {
 
     public void setVotes(List<Vote> votes) {
         this.votes = votes;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Restaurant that = (Restaurant) o;
-        return Objects.equals(city, that.city) &&
-                Objects.equals(description, that.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), city, description);
     }
 
     @Override

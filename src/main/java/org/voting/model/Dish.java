@@ -7,7 +7,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Entity
 @Table(name = "dishes")
@@ -51,21 +50,6 @@ public class Dish extends AbstractNamedEntity {
 
     public void setMenu(Menu menu) {
         this.menu = menu;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Dish dish = (Dish) o;
-        return Objects.equals(price, dish.price) &&
-                Objects.equals(menu, dish.menu);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), price, menu);
     }
 
     @Override

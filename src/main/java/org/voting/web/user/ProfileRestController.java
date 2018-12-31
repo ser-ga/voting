@@ -24,7 +24,7 @@ import static org.voting.util.ValidationUtil.checkNew;
 @RestController
 @RequestMapping(value = ProfileRestController.REST_URL)
 public class ProfileRestController {
-    static final String REST_URL = "/rest/profile";
+    static final String REST_URL = "/rest/profiles";
 
     private final UserRepository userRepository;
 

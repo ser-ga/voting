@@ -8,7 +8,6 @@ import org.voting.model.Menu;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 public class MenuTo implements HasId {
 
@@ -74,22 +73,6 @@ public class MenuTo implements HasId {
 
     public void setAdded(LocalDate added) {
         this.added = added;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MenuTo menuTo = (MenuTo) o;
-        return Objects.equals(id, menuTo.id) &&
-                Objects.equals(restaurantId, menuTo.restaurantId) &&
-                Objects.equals(dishes, menuTo.dishes) &&
-                Objects.equals(added, menuTo.added);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, restaurantId, dishes, added);
     }
 
     @Override

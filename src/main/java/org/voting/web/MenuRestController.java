@@ -23,7 +23,7 @@ import static org.voting.util.MenuUtil.createFromTo;
 @RestController
 @RequestMapping(value = MenuRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class MenuRestController {
-    static final String REST_URL = "/rest/menu";
+    static final String REST_URL = "/rest/menus";
 
     private final MenuService menuService;
 
