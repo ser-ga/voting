@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
@@ -17,7 +18,6 @@ import org.voting.util.exception.IllegalRequestDataException;
 import org.voting.util.exception.NotFoundException;
 import org.voting.util.exception.VotingExpirationException;
 
-import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice(annotations = RestController.class)
@@ -45,8 +45,8 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND) //404
-    @ExceptionHandler({NoResultException.class})
-    public void noResult(HttpServletRequest req, NoResultException e) {
+    @ExceptionHandler({EmptyResultDataAccessException.class})
+    public void noResult(HttpServletRequest req, EmptyResultDataAccessException e) {
         logExceptionInfo(req, e, false);
     }
 

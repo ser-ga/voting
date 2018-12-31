@@ -12,7 +12,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>, RestaurantRepositoryCustom {
 
-    //TODO сделать Menu с Subselect над классом???
     @Query("SELECT DISTINCT r FROM Restaurant r LEFT JOIN FETCH r.menus m WHERE r.id=?1")
     Restaurant getByIdWithMenus(int id);
 

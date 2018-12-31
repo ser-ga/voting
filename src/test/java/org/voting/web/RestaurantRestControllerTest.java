@@ -36,7 +36,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(getToMatcher(getAllRestaurants(), Restaurant.class));
+                .andExpect(getToMatcher(getAllRestaurants(), Restaurant.class, FIELDS_MENUS_AND_VOTES));
     }
 
     //TODO надо переделывать Entity Menu, попробовать с subselect
@@ -60,7 +60,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     void testGetNotFound() throws Exception {
         mockMvc.perform(get(REST_URL + 1)
                 .with(userHttpBasic(USER1)))
-                .andExpect(status().isInternalServerError()); //TODO хендлер не ловит NoResultException
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -74,7 +74,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
         created.setId(returned.getId());
         assertMatch(returned, created);
         List<Restaurant> expectList = List.of(RESTAURANT1, RESTAURANT2, RESTAURANT3, RESTAURANT4, RESTAURANT5, RESTAURANT6, created);
-        assertMatch(restaurantRepository.findAll(), expectList, "menus", "votes");
+        assertMatch(restaurantRepository.findAll(), expectList, FIELDS_MENUS_AND_VOTES);
     }
 
     @Test
@@ -97,7 +97,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isNoContent());
 
-        assertMatch(restaurantRepository.findById(RESTAURANT1_ID).orElse(null), updated, "menus", "votes");
+        assertMatch(restaurantRepository.findById(RESTAURANT1_ID).orElse(null), updated, FIELDS_MENUS_AND_VOTES);
     }
 
     @Test
@@ -119,7 +119,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk());
         List<Restaurant> expectList = List.of(RESTAURANT1, RESTAURANT2, RESTAURANT4, RESTAURANT5, RESTAURANT6);
-        assertMatch(restaurantRepository.findAll(), expectList, "menus", "votes");
+        assertMatch(restaurantRepository.findAll(), expectList, FIELDS_MENUS_AND_VOTES);
     }
 
     @Test

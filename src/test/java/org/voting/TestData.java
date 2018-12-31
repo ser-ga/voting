@@ -42,6 +42,8 @@ public class TestData {
     public static final Restaurant RESTAURANT5 = new Restaurant(RESTAURANT1_ID + 4, "McDs2", "Москва", "Бургеры и картошка");
     public static final Restaurant RESTAURANT6 = new Restaurant(RESTAURANT1_ID + 5, "McDs3", "Москва", "Бургеры и картошка");
 
+    public static final String[] FIELDS_MENUS_AND_VOTES = new String[]{"menus", "votes"};
+
     public static final int DISH1_ID = START_SEQ + 13;
 
     public static final Dish DISH1 = new Dish(DISH1_ID, "1Картошка", BigDecimal.valueOf(70.15));
@@ -124,8 +126,8 @@ public class TestData {
         return writeAdditionProps(user, "password", passw);
     }
 
-    public static <T> ResultMatcher getToMatcher(Iterable<T> expected, Class<T> clazz) {
-        return result -> assertThat(readListFromJsonMvcResult(result, clazz)).isEqualTo(expected);
+    public static <T> ResultMatcher getToMatcher(Iterable<T> expected, Class<T> clazz,String... ignoringFields) {
+        return result -> assertThat(readListFromJsonMvcResult(result, clazz)).usingElementComparatorIgnoringFields(ignoringFields).isEqualTo(expected);
     }
 
     public static <T> List<T> readListFromJsonMvcResult(MvcResult result, Class<T> clazz) throws UnsupportedEncodingException {

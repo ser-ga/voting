@@ -1,7 +1,5 @@
 package org.voting.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +10,6 @@ import org.voting.repository.MenuRepository;
 import org.voting.repository.restaurant.RestaurantRepository;
 import org.voting.util.exception.IllegalRequestDataException;
 import org.voting.util.exception.NotFoundException;
-import org.voting.web.MenuRestController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,8 +20,6 @@ import static org.voting.util.ValidationUtil.checkNotFound;
 @Service
 @Transactional(readOnly = true)
 public class MenuServiceImpl implements MenuService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MenuRestController.class);
 
     private final RestaurantRepository restaurantRepository;
     private final MenuRepository menuRepository;

@@ -31,7 +31,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(getToMatcher(getAllMenuTo(), MenuTo.class))
+                .andExpect(getToMatcher(getAllMenuTo(), MenuTo.class,FIELDS_RESTAURANT_AND_DISHES))
                 .andDo(print());
     }
 
@@ -51,8 +51,8 @@ class MenuRestControllerTest extends AbstractControllerTest {
 
         created.setId(returned.getId());
 
-        assertMatch(returned, created, "dishes", "restaurant");
-        assertMatch(menuRepository.getById(returned.getId()), created, "dishes", "restaurant");
+        assertMatch(returned, created, FIELDS_RESTAURANT_AND_DISHES);
+        assertMatch(menuRepository.getById(returned.getId()), created, FIELDS_RESTAURANT_AND_DISHES);
     }
 
     @Test
@@ -85,7 +85,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(USER1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertMatch(readFromJsonMvcResult(result, Menu.class), MENU1, "dishes", "restaurant"))
+                .andExpect(result -> assertMatch(readFromJsonMvcResult(result, Menu.class), MENU1, FIELDS_RESTAURANT_AND_DISHES))
                 .andDo(print());
     }
 
@@ -118,8 +118,8 @@ class MenuRestControllerTest extends AbstractControllerTest {
 
         created.setId(returned.getId());
 
-        assertMatch(returned, created, "dishes", "restaurant");
-        assertMatch(menuRepository.getById(returned.getId()), created, "dishes", "restaurant");
+        assertMatch(returned, created, FIELDS_RESTAURANT_AND_DISHES);
+        assertMatch(menuRepository.getById(returned.getId()), created, FIELDS_RESTAURANT_AND_DISHES);
     }
 
     @Test
@@ -152,7 +152,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk());
         List<Menu> expectList = List.of(MENU2, MENU3);
-        assertMatch(menuRepository.findAll(), expectList, "dishes", "restaurant");
+        assertMatch(menuRepository.findAll(), expectList, FIELDS_RESTAURANT_AND_DISHES);
     }
 
     @Test
