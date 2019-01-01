@@ -3,6 +3,8 @@ package org.voting.web;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.voting.model.Vote;
 import org.voting.service.VoteService;
 import org.voting.util.VoteTime;
@@ -13,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.voting.TestData.*;
-import static org.voting.TestUtil.assertMatch;
 
 class VoteRestControllerTest extends AbstractControllerTest {
 
@@ -34,21 +35,20 @@ class VoteRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(USER1)));
 
         List<Vote> actual = voteService.getAll(USER1.getEmail());
-
-        assertEquals( 1, actual.size());
-        assertMatch(actual.get(0).getUser(), USER1, "votes", "registered");
+        assertEquals(1, actual.size());
+        assertEquals(USER1.getEmail(), actual.get(0).getUserEmail());
 
         int actualRestaurantId = actual.get(0).getRestaurant().getId();
-
         assertEquals(RESTAURANT1_ID, actualRestaurantId);
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
     void testVoteInvalid() throws Exception {
         increaseVoteTime();
         mockMvc.perform(post(REST_URL + 1)
                 .with(userHttpBasic(USER1)))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isConflict());
     }
 
     @Test

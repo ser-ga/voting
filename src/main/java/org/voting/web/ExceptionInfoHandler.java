@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.voting.util.exception.IllegalRequestDataException;
 import org.voting.util.exception.NotFoundException;
-import org.voting.util.exception.VotingExpirationException;
+import org.voting.util.exception.VoteException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,8 +33,8 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(value = HttpStatus.PRECONDITION_FAILED) //412 Предварительное условие не выполнено
-    @ExceptionHandler({VotingExpirationException.class})
-    public void binding(HttpServletRequest req, VotingExpirationException e) {
+    @ExceptionHandler({VoteException.class})
+    public void binding(HttpServletRequest req, VoteException e) {
         logExceptionInfo(req, e, false);
     }
 

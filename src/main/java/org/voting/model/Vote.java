@@ -16,10 +16,9 @@ public class Vote extends AbstractBaseEntity {
     @Column(name = "DATE")
     private LocalDate date = LocalDate.now();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+    @NotNull
+    @Column(name = "USER_EMAIL")
+    private String userEmail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESTAURANT_ID", nullable = false)
@@ -28,9 +27,14 @@ public class Vote extends AbstractBaseEntity {
 
     public Vote(){}
 
-    public Vote(Integer id, User user, Restaurant restaurant) {
+    public Vote(Integer id, String userEmail, Restaurant restaurant) {
         super(id);
-        this.user = user;
+        this.userEmail = userEmail;
+        this.restaurant = restaurant;
+    }
+
+    public Vote(String userEmail, Restaurant restaurant) {
+        this.userEmail = userEmail;
         this.restaurant = restaurant;
     }
 
@@ -42,12 +46,12 @@ public class Vote extends AbstractBaseEntity {
         this.date = date;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public Restaurant getRestaurant() {
@@ -63,7 +67,7 @@ public class Vote extends AbstractBaseEntity {
         return "Vote{" +
                 "id=" + id +
                 ", date=" + date +
-                ", user=" + user +
+                ", user=" + userEmail +
                 ", restaurant=" + restaurant +
                 '}';
     }

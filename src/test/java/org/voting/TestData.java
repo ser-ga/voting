@@ -68,7 +68,7 @@ public class TestData {
     public static final int VOTE1_ID = START_SEQ + 21;
 
     public static Vote getVote() {
-        return new Vote(VOTE1_ID, USER1, RESTAURANT1);
+        return new Vote(VOTE1_ID, USER1.getEmail(), RESTAURANT1);
     }
 
     public static Restaurant getRestaurant() {

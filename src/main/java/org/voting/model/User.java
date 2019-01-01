@@ -48,11 +48,6 @@ public class User extends AbstractNamedEntity {
     @ElementCollection(fetch = FetchType.LAZY)
     private Set<Role> roles;
 
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @OrderBy("date DESC")
-    private List<Vote> votes;
-
     public String getEmail() {
         return email;
     }
@@ -91,14 +86,6 @@ public class User extends AbstractNamedEntity {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public List<Vote> getVotes() {
-        return votes;
-    }
-
-    public void setVotes(List<Vote> votes) {
-        this.votes = votes;
     }
 
     public User() {

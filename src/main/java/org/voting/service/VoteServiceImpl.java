@@ -7,11 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.voting.model.Restaurant;
 import org.voting.model.Vote;
-import org.voting.repository.UserRepository;
 import org.voting.repository.VoteRepository;
 import org.voting.repository.restaurant.RestaurantRepository;
 import org.voting.util.VoteTime;
-import org.voting.util.exception.VotingExpirationException;
+import org.voting.util.exception.VoteException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,6 +19,7 @@ import java.util.List;
 import static org.voting.util.ValidationUtil.checkNotFound;
 
 @Service
+@Transactional(readOnly = true)
 public class VoteServiceImpl implements VoteService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VoteServiceImpl.class);
@@ -28,45 +28,41 @@ public class VoteServiceImpl implements VoteService {
 
     private final RestaurantRepository restaurantRepository;
 
-    private final UserRepository userRepository;
-
     private final VoteTime voteTime;
 
     @Autowired
-    public VoteServiceImpl(VoteRepository voteRepository, RestaurantRepository restaurantRepository, UserRepository userRepository, VoteTime voteTime) {
+    public VoteServiceImpl(VoteRepository voteRepository, RestaurantRepository restaurantRepository, VoteTime voteTime) {
         this.voteRepository = voteRepository;
         this.restaurantRepository = restaurantRepository;
-        this.userRepository = userRepository;
         this.voteTime = voteTime;
     }
 
     @Override
     @Transactional
     public void vote(int restaurantId, String email) {
+        if (LocalTime.now().isAfter(VoteTime.getTime())) {
+            throw new VoteException("Time for vote expired at " + voteTime + " by server time");
+        }
+
         LOGGER.info("{} vote for restaurant with id {}", email, restaurantId);
 
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        checkNotFound(restaurant, "Not found restaurant with id=" + restaurantId);
-
-        if (LocalTime.now().isBefore(VoteTime.getTime())) {
-            Vote vote = voteRepository.findByUser_EmailAndDate(email, LocalDate.now());
-            if (vote == null) {
-                vote = new Vote();
-                vote.setUser(userRepository.getByEmail(email));
-            }
-            vote.setRestaurant(restaurant);
-            voteRepository.save(vote);
-        } else {
-            throw new VotingExpirationException("Time voting expired at " + voteTime + " by server time");
+        Restaurant restaurant = restaurantRepository.getOne(restaurantId);
+        Vote vote = voteRepository.findByUserEmailAndDate(email, LocalDate.now());
+        if (vote == null) {
+            vote = new Vote();
+            vote.setUserEmail(email);
         }
+        vote.setRestaurant(restaurant);
+        voteRepository.save(vote);
     }
 
     @Override
     public List<Vote> getAll(String email) {
-        return voteRepository.getAllByUser_Email(email);
+        return voteRepository.getAllByUserEmail(email);
     }
 
-    public Vote findByUser_EmailAndDate( String email, LocalDate date){
-        return voteRepository.findByUser_EmailAndDate(email, date);
+    @Override
+    public Vote findByUser_EmailAndDate(String email, LocalDate date) {
+        return voteRepository.findByUserEmailAndDate(email, date);
     }
 }
