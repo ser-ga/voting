@@ -1,4 +1,4 @@
-package org.voting.repository;
+package org.voting.util;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

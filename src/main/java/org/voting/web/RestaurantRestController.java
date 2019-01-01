@@ -11,7 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.voting.View;
 import org.voting.model.Restaurant;
 import org.voting.repository.restaurant.RestaurantRepository;
-import org.voting.util.exception.IllegalRequestDataException;
+import org.voting.util.exception.NotFoundException;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -32,13 +32,11 @@ public class RestaurantRestController {
 
     }
 
-    // достать все рестораны
     @GetMapping
     public List<Restaurant> getAll() {
         return restaurantRepository.findAll();
     }
 
-    // достать ресторан по ID с меню на сегодня
     @GetMapping("/{id}")
     public ResponseEntity getById(@PathVariable("id") Integer id) {
         Restaurant restaurant = restaurantRepository.getByIdWithMenuByDate(id, LocalDate.now());
@@ -46,41 +44,35 @@ public class RestaurantRestController {
         return ResponseEntity.ok(restaurant);
     }
 
-    // добавить ресторан
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity create(@Validated(View.Web.class) @RequestBody Restaurant restaurant) {
         checkNew(restaurant);
         Restaurant created = restaurantRepository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{id}") //TODO убрать дублирование URI через константу
+                .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
 
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    // обновить ресторан
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@PathVariable("id") Integer id, @Validated(View.Web.class) @RequestBody Restaurant restaurant) {
         assureIdConsistent(restaurant, id);
-        Restaurant stored = restaurantRepository.findById(id).orElse(null);
-        if (stored != null) {
-            stored.setName(restaurant.getName());
-            stored.setCity(restaurant.getCity());
-            stored.setDescription(restaurant.getDescription());
-            restaurantRepository.save(stored);
-        } else {
-            throw new IllegalRequestDataException("Not Restaurant found for ID " + id);
-        }
+        Restaurant found = checkNotFound(restaurantRepository.findById(id).orElse(null), "Restaurant not found for ID " + id);
+        found.setName(restaurant.getName());
+        found.setCity(restaurant.getCity());
+        found.setDescription(restaurant.getDescription());
+        restaurantRepository.save(found);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable("id") Integer id) {
-        if (restaurantRepository.removeById(id) == 1) return new ResponseEntity<>(HttpStatus.OK);
-        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") Integer id) {
+        if (restaurantRepository.removeById(id) != 1) throw new NotFoundException("Restaurant not found for ID " + id);
     }
 
 

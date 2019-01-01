@@ -117,7 +117,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     void testDelete() throws Exception {
         mockMvc.perform(delete(REST_URL + RESTAURANT3.getId())
                 .with(userHttpBasic(ADMIN)))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         List<Restaurant> expectList = List.of(RESTAURANT1, RESTAURANT2, RESTAURANT4, RESTAURANT5, RESTAURANT6);
         assertMatch(restaurantRepository.findAll(), expectList, FIELDS_MENUS_AND_VOTES);
     }
