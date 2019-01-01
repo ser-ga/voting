@@ -1,16 +1,14 @@
 # API documentation
 
-Запросы к API осуществляются через протокол HTTP с базовой авторизацией.
-
-При наличии тела запроса (запросы типа POST и PUT), его содержимое должно быть передано в формате JSON, заголовок Content-Type должен быть установлен в application/json.
-
+Requests to the API are made via the HTTP protocol with basic authorization. 
+POST and PUT request's content must be transferred in JSON format, the Content-Type header must be set to "application/json".
 #### Basic authorization (Base64)
 
     "admin@yandex.ru:pass"          "YWRtaW5AeWFuZGV4LnJ1OnBhc3M="     
     "user@ya.ru:pass"               "dXNlckB5YS5ydTpwYXNz"
     "lisa@gmail.com:password"       "bGlzYTEyMkBnbWFpbC5jb206cGFzc3dvcmQ="
 
-Пример авторизации для пользователя admin@yandex.ru
+Authorization example for user admin@yandex.ru
 
     "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M="
 
@@ -257,7 +255,7 @@ method: `PUT`
 path: `/rest/restaurants/{id}`
 
 
-    curl -s -X PUT -d '{"name": "Гусли", "city": "Александров", "description": "Ресторан русской кухни"}' -H 'Content-Type:application/json;charset=UTF-8' -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M="  http://{hostname}/rest/restaurant/{id}
+    curl -s -X PUT -d '{"name": "Гусли", "city": "Александров", "description": "Ресторан русской кухни"}' -H 'Content-Type:application/json;charset=UTF-8' -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M="  http://{hostname}/rest/restaurants/{id}
 
 Request:
 
@@ -289,5 +287,213 @@ HTTP status codes:
 
 | Code | Status | Description |
 | --- | --- | --- |
+| 204 | No Content | Normal status |
+| 422 | Unprocessable Entity | Not found entity |
+
+## Menu
+
+#### Get all menus
+***
+
+method: `GET`
+
+path: `/rest/menus`
+
+    curl -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M=" http://{hostname}/rest/menus
+
+Response:
+
+    [
+        {
+            "id": 10010,
+            "restaurantId": 10006,
+            "dishes": [
+                {
+                    "id": 10013,
+                    "name": "Картошка",
+                    "price": 70.15
+                },
+                {
+                    "id": 10014,
+                    "name": "Бургер куриный",
+                    "price": 80.55
+                },
+                {
+                    "id": 10015,
+                    "name": "Салат",
+                    "price": 100.35
+                }
+            ],
+            "added": "2018-12-14"
+        },
+        
+        ...
+        
+    ]
+    
+HTTP status codes:
+
+| Code | HTTP status | Description |
+| --- | --- | --- |
+| 200 | OK | Normal status |
+| 403 | Forbidden | Need admin role |
+
+#### Get menu
+***
+
+method: `GET`
+
+path: `/rest/menus/{id}`
+
+    curl -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M=" http://{hostname}/rest/menus/{id}
+
+Response:
+
+    {
+        "id": 10010,
+        "added": "2018-12-14",
+        "dishes": [
+            {
+                "id": 10013,
+                "name": "Картошка",
+                "price": 70.15
+            },
+            {
+                "id": 10014,
+                "name": "Бургер куриный",
+                "price": 80.55
+            },
+            {
+                "id": 10015,
+                "name": "Салат",
+                "price": 100.35
+            }
+        ]
+    }
+    
+    
+HTTP status codes:
+
+| Code | HTTP status | Description |
+| --- | --- | --- |
+| 200 | OK | Normal status |
+| 403 | Forbidden | Need admin role |
+
+#### Get menu by restaurant ID and date(optional)
+***
+
+method: `GET`
+
+path: `/rest/menus/by`
+
+
+
+| Request param | type | required | example |
+| --- | --- | --- | --- |
+| **restaurantId** | Number | true | 10006 |
+| **date** | Date ISO 8601 | false | 2018-12-14 |
+
+    curl -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M=" http://{hostname}/rest/menus/by?restaurantId={id}&date={date}
+
+Response:
+
+    [
+        {
+            "id": 10010,
+            "added": "2018-12-14",
+            "dishes": [
+                {
+                    "id": 10013,
+                    "name": "1Картошка",
+                    "price": 70.15
+                },
+                {
+                    "id": 10014,
+                    "name": "2Бургер куриный",
+                    "price": 80.55
+                },
+                {
+                    "id": 10015,
+                    "name": "3Салат",
+                    "price": 100.35
+                }
+            ]
+        },
+        {
+            "id": 10012,
+            "added": "2019-01-01",
+            "dishes": [
+                {
+                    "id": 10019,
+                    "name": "1Пицца",
+                    "price": 279.49
+                },
+                {
+                    "id": 10020,
+                    "name": "2Пицца",
+                    "price": 279.49
+                }
+            ]
+        }
+    ]
+    
+    
+HTTP status codes:
+
+| Code | HTTP status | Description |
+| --- | --- | --- |
+| 200 | OK | Normal status |
+| 403 | Forbidden | Need admin role |
+
+#### Update menu
+***
+
+method: `PUT`
+
+path: `/rest/menus/{id}`
+
+
+    curl -s -X PUT -d '{"id": "10010", "restaurantId": 10006, "added": "2018-12-14", "dishes": [{"name": "Ролл1", "price": 270.15},{"name": "Ролл2", "price": 280.55}]}' -H 'Content-Type:application/json;charset=UTF-8' -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M="  http://{hostname}/rest/menus/{id}
+
+Request:
+
+    {
+        "id": 10010,
+        "restaurantId": 10006,
+        "added": "2018-12-14",
+        "dishes": [
+            {
+                "name": "Ролл1",
+                "price": 270.15
+            },
+            {
+                "name": "Ролл2",
+                "price": 280.55
+            }
+        ]
+    }
+        
+HTTP status codes:
+
+| Code | Status | Description |
+| --- | --- | --- |
 | 204 | No Content |
+| 409 | Conflict |
 | 422 | Unprocessable Entity |
+
+
+#### Delete menu
+***
+
+method: `DELETE`
+
+path: `/rest/menus/{id}`
+
+    curl -s -X DELETE -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M=" http://{hostname}/rest/menus/{id}
+
+HTTP status codes:
+
+| Code | Status | Description |
+| --- | --- | --- |
+| 204 | No Content | Normal status |
+| 422 | Unprocessable Entity | Not found entity |

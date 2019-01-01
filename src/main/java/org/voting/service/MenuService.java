@@ -11,7 +11,7 @@ public interface MenuService {
 
     Menu getById(int id);
 
-    Menu getBy(int restaurantId, LocalDate date);
+    List<Menu> getBy(int restaurantId, LocalDate date);
 
     Menu update(Menu menu, int restaurantId);
 

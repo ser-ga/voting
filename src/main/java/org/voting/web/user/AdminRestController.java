@@ -11,13 +11,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.voting.View;
 import org.voting.model.User;
 import org.voting.repository.UserRepository;
+import org.voting.util.exception.NotFoundException;
 
 import java.net.URI;
 import java.util.List;
 
 import static org.voting.util.UserUtil.prepareToSave;
-import static org.voting.util.ValidationUtil.assureIdConsistent;
-import static org.voting.util.ValidationUtil.checkNew;
+import static org.voting.util.ValidationUtil.*;
 
 @RestController
 @RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,19 +36,15 @@ public class AdminRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity get(@PathVariable("id") Integer id) {
-        User user = userRepository.getByIdWithRoles(id);
-        if (user == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(user);
+    public User get(@PathVariable("id") Integer id) {
+        return checkNotFound(userRepository.getById(id), "User not found with ID=" + id);
     }
 
     @GetMapping
     public List<User> getAll() {
-        return userRepository.findAll();
+        return userRepository.getAllBy();
     }
 
-
-    //TODO проверить как создаются роли
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> create(@Validated(View.Web.class) @RequestBody User user) {
         checkNew(user);
@@ -61,12 +57,11 @@ public class AdminRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable("id") Integer id) {
-        if (userRepository.removeById(id) == 1) return ResponseEntity.ok().build();
-        else return ResponseEntity.notFound().build();
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") Integer id) {
+        if (userRepository.removeById(id) == 0) throw new NotFoundException("User not found with ID=" + id);
     }
 
-    //TODO переделать через ExceptionHandler
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@PathVariable("id") int id, @Validated(View.Web.class) @RequestBody User user) {
@@ -75,10 +70,8 @@ public class AdminRestController {
         userRepository.save(user);
     }
 
-    @GetMapping(value = "/by")
-    public ResponseEntity getByEmail(@RequestParam("email") String email) {
-        User user = userRepository.getByEmail(email);
-        if (user == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(user);
+    @GetMapping("/by")
+    public User getByEmail(@RequestParam("email") String email) {
+        return checkNotFound(userRepository.getByEmail(email),"User not found with email=" + email);
     }
 }

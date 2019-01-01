@@ -2,6 +2,7 @@ package org.voting.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.voting.util.MenuUtil.createFromTo;
+import static org.voting.util.ValidationUtil.assureIdConsistent;
 
 @RestController
 @RequestMapping(value = MenuRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,28 +51,13 @@ public class MenuRestController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity getById(@PathVariable("id") int id) {
-        return checkNotFound(menuService.getById(id));
+        return ResponseEntity.ok().body(menuService.getById(id));
     }
 
     @GetMapping(value = "/by")
     public ResponseEntity getBy(@RequestParam("restaurantId") int restaurantId,
                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "date", required = false) LocalDate date) {
-        return checkNotFound(menuService.getBy(restaurantId, date));
-    }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity update(@Validated @RequestBody MenuTo menuTo) {
-        Menu updated = createFromTo(menuTo);
-        Menu menu = menuService.update(updated, menuTo.getRestaurantId());
-
-        return ResponseEntity.ok().body(menu);
-    }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable("id") int id) {
-        menuService.delete(id);
+        return ResponseEntity.ok().body(menuService.getBy(restaurantId, date));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -81,8 +68,21 @@ public class MenuRestController {
                 .collect(Collectors.toList());
     }
 
-    private ResponseEntity checkNotFound(Menu menu) {
-        if (menu == null) return ResponseEntity.notFound().build();
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity update(@PathVariable("id") int id, @Validated @RequestBody MenuTo menuTo) {
+        assureIdConsistent(menuTo, id);
+        Menu updated = createFromTo(menuTo);
+        Menu menu = menuService.update(updated, menuTo.getRestaurantId());
+
         return ResponseEntity.ok().body(menu);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") int id) {
+        menuService.delete(id);
+    }
+
 }

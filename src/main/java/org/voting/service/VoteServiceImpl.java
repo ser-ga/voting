@@ -62,8 +62,8 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<Vote> findAll() {
-        return voteRepository.findAll();
+    public List<Vote> getAll(String email) {
+        return voteRepository.getAllByUser_Email(email);
     }
 
     public Vote findByUser_EmailAndDate( String email, LocalDate date){

@@ -35,7 +35,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
     void testGetNotFound() throws Exception {
         mockMvc.perform(get(REST_URL + 1)
                 .with(userHttpBasic(ADMIN)))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isUnprocessableEntity())
                 .andDo(print());
     }
 
@@ -52,7 +52,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
     void testGetByEmailNotFound() throws Exception {
         mockMvc.perform(get(REST_URL + "by?email=test@mail.ru")
                 .with(userHttpBasic(ADMIN)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -68,7 +68,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testCreate() throws Exception {
-        User expected = new User(null, "New User", "new@user", "password");
+        User expected = new User(null, "New User", "new@user", "password", Set.of(Role.ROLE_USER));
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
@@ -88,7 +88,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(delete(REST_URL + USER1_ID)
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         List<User> expectList = List.of(ADMIN, USER2, USER3);
         assertMatch(userRepository.findAll(), expectList, "registered", "votes");
     }
@@ -97,7 +97,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
     void testDeleteNotFound() throws Exception {
         mockMvc.perform(delete(REST_URL + 1)
                 .with(userHttpBasic(ADMIN)))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isUnprocessableEntity())
                 .andDo(print());
     }
 

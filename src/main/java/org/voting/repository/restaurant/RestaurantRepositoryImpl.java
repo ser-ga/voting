@@ -12,6 +12,7 @@ import java.time.LocalDate;
 //http://qaru.site/questions/2181737/spring-data-left-join-fetch-query-returning-null
 @Transactional(readOnly = true)
 public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
+
     @PersistenceContext
     EntityManager entityManager;
 

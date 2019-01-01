@@ -8,7 +8,6 @@ import org.voting.model.Restaurant;
 import org.voting.repository.DishRepository;
 import org.voting.repository.MenuRepository;
 import org.voting.repository.restaurant.RestaurantRepository;
-import org.voting.util.exception.IllegalRequestDataException;
 import org.voting.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -51,23 +50,22 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public Menu getById(int id) {
-        return menuRepository.findById(id).orElse(null);
+        Menu menu = menuRepository.findById(id).orElse(null);
+        return checkNotFound(menu, "Not found menu with id=" + id);
     }
 
     @Override
-    public Menu getBy(int restaurantId, LocalDate date) {
-        return menuRepository.getByRestaurant_IdAndAdded(restaurantId, date == null ? LocalDate.now() : date);
+    public List<Menu> getBy(int restaurantId, LocalDate date) {
+        if (date == null) return menuRepository.getByRestaurant_Id(restaurantId);
+        return menuRepository.getByRestaurant_IdAndAdded(restaurantId, date);
     }
 
     @Override
     @Transactional
     public Menu update(Menu menu, int restaurantId) {
-        if (menu.getId() == null) throw new IllegalRequestDataException("Menu must be with id");
-
-        Menu stored = menuRepository.findById(menu.getId()).orElse(null);
-        checkNotFound(stored, "Not found menu with id=" + menu.getId());
-        if (stored != null && !menu.getDishes().isEmpty()) {
-            if (menuRepository.delete(menu.getId()) == 1) { //TODO может не нужно данное условие
+        checkNotFound(menuRepository.findById(menu.getId()).orElse(null), "Not found menu with id=" + menu.getId());
+        if (!menu.getDishes().isEmpty()) {
+            if (menuRepository.delete(menu.getId()) == 1) {
                 menu.setId(null);
                 return create(menu, restaurantId);
             }
@@ -83,6 +81,6 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<Menu> getAll() {
-        return menuRepository.findAll();
+        return menuRepository.getAllByOrderByIdAsc();
     }
 }

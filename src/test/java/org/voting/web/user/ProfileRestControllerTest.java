@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.voting.model.Role;
 import org.voting.model.User;
 import org.voting.web.AbstractControllerTest;
 
@@ -54,7 +55,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testRegister() throws Exception {
-        User created = new User(null, "newName", "newemail@ya.ru", "newPassword");
+        User created = new User(null, "newName", "newemail@ya.ru", "newPassword", Set.of(Role.ROLE_USER));
         ResultActions action = mockMvc.perform(post(REST_URL + "/register").contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(created, "newPassword")))
                 .andDo(print())
@@ -69,7 +70,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testUpdate() throws Exception {
-        User updated = new User(USER1.getId(), "newName", "newemail@ya.ru", "newPassword");
+        User updated = new User(USER1.getId(), "newName", "newemail@ya.ru", "newPassword",Set.of(Role.ROLE_USER));
         mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(USER1))
                 .content(jsonWithPassword(updated, "newPassword")))
@@ -92,7 +93,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void testDuplicate() throws Exception {
-        User updated = new User(null, "newName", "admin@yandex.ru", "newPassword");
+        User updated = new User(null, "newName", "admin@yandex.ru", "newPassword", Set.of(Role.ROLE_USER));
 
         mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(USER1))

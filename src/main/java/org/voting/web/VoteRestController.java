@@ -23,16 +23,15 @@ public class VoteRestController {
         this.voteService = voteService;
     }
 
-    // проголосовать за ресторан по ID
-    // TODO отдавать исключения в JSON
     @PostMapping("/{restaurantId}")
     public void vote(@PathVariable("restaurantId") Integer restaurantId) {
         String username = SecurityUtil.getAuthUsername();
-        voteService.vote(restaurantId, username); // TODO  надо прикрутить авторизацию
+        voteService.vote(restaurantId, username);
     }
 
     @GetMapping
     public List<Vote> getAll(){
-        return voteService.findAll();
+        String username = SecurityUtil.getAuthUsername();
+        return voteService.getAll(username);
     }
 }

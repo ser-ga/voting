@@ -46,10 +46,15 @@ class MenuServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
-    void testGetBy() {
-        Menu actual = menuService.getBy(RESTAURANT3.getId(), MENU1.getAdded());
-        assertMatch(actual,MENU1, FIELDS_RESTAURANT_AND_DISHES);
-        assertMatch(actual.getDishes(),MENU1.getDishes(), FIELD_MENU);
+    void testGetByRestaurantId() {
+        List<Menu> actual = menuService.getBy(RESTAURANT3.getId(), null);
+        assertMatch(actual, List.of(MENU1, MENU3), FIELDS_RESTAURANT_AND_DISHES);
+    }
+
+    @Test
+    void testGetByRestaurantIdAndDate() {
+        List<Menu> actual = menuService.getBy(RESTAURANT3.getId(), LocalDate.now());
+        assertMatch(actual, List.of(MENU3), FIELDS_RESTAURANT_AND_DISHES);
     }
 
     @Test
@@ -68,12 +73,6 @@ class MenuServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
-    void testUpdateNoId() throws Exception {
-        Menu updated = new Menu(null, LocalDate.now(), getNewDishes(), RESTAURANT3);
-        assertThrows(IllegalRequestDataException.class, () -> menuService.update(updated, RESTAURANT3.getId()));
-    }
-
-    @Test
     void testDelete() {
         menuService.delete(MENU1_ID);
         assertMatch(menuService.getAll(), List.of(MENU2, MENU3), FIELDS_RESTAURANT_AND_DISHES);
@@ -87,6 +86,6 @@ class MenuServiceImplTest extends AbstractServiceTest {
     @Test
     void testGetAll() {
         List<Menu> actual = menuService.getAll();
-        assertMatch(actual, getAllMenus(),FIELDS_RESTAURANT_AND_DISHES);
+        assertMatch(actual, getAllMenus(), FIELDS_RESTAURANT_AND_DISHES);
     }
 }

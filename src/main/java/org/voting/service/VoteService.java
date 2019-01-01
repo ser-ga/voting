@@ -9,7 +9,7 @@ public interface VoteService {
 
     void vote(int restaurantId, String username);
 
-    List<Vote> findAll();
+    List<Vote> getAll(String email);
 
     Vote findByUser_EmailAndDate( String email, LocalDate date);
 

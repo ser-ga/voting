@@ -31,7 +31,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(getToMatcher(getAllMenuTo(), MenuTo.class,FIELDS_RESTAURANT_AND_DISHES))
+                .andExpect(getToMatcher(getAllMenuTo(), MenuTo.class, FIELDS_RESTAURANT_AND_DISHES))
                 .andDo(print());
     }
 
@@ -93,7 +93,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
     void testGetNotFound() throws Exception {
         mockMvc.perform(get(REST_URL + 1)
                 .with(userHttpBasic(USER1)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -106,7 +106,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
     void testUpdate() throws Exception {
         MenuTo updatedTo = new MenuTo(MENU1_ID, RESTAURANT1_ID, getNewDishes(), MENU1.getAdded());
 
-        ResultActions action = mockMvc.perform(put(REST_URL)
+        ResultActions action = mockMvc.perform(put(REST_URL + MENU1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
                 .content(writeValue(updatedTo)))
@@ -126,7 +126,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
     void testUpdateInvalid() throws Exception {
         MenuTo invalid = new MenuTo(MENU1_ID, RESTAURANT1_ID, null, MENU1.getAdded());
 
-        ResultActions action = mockMvc.perform(put(REST_URL)
+        ResultActions action = mockMvc.perform(put(REST_URL + MENU1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
                 .content(writeValue(invalid)))
@@ -138,7 +138,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
     void testUpdateForbidden() throws Exception {
         MenuTo updatedTo = new MenuTo(MENU1_ID, RESTAURANT1_ID, getNewDishes(), MENU1.getAdded());
 
-        mockMvc.perform(put(REST_URL)
+        mockMvc.perform(put(REST_URL + MENU1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(USER1))
                 .content(writeValue(updatedTo)))
@@ -150,7 +150,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
     void testDelete() throws Exception {
         mockMvc.perform(delete(REST_URL + MENU1_ID)
                 .with(userHttpBasic(ADMIN)))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         List<Menu> expectList = List.of(MENU2, MENU3);
         assertMatch(menuRepository.findAll(), expectList, FIELDS_RESTAURANT_AND_DISHES);
     }

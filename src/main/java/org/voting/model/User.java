@@ -41,11 +41,12 @@ public class User extends AbstractNamedEntity {
     @Column(name = "ENABLED", nullable = false, columnDefinition = "bool default true")
     private boolean enabled = true;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "ROLES", joinColumns = @JoinColumn(name = "USER_ID"))
     @Column(name = "ROLE")
     @ElementCollection(fetch = FetchType.LAZY)
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
@@ -111,10 +112,11 @@ public class User extends AbstractNamedEntity {
         this.roles = Collections.singleton(role);
     }
 
-    public User(Integer id, String name, String email, String password) {
+    public User(Integer id, String name, String email, String password, Collection<Role> roles) {
         super(id, name);
         this.email = email;
         this.password = password;
+        setRoles(roles);
     }
 
     public User(Integer id, String name, String email, String password, Date registered, Collection<Role> roles) {
