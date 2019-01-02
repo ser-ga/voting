@@ -16,8 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static org.voting.util.ValidationUtil.checkNotFound;
-
 @Service
 @Transactional(readOnly = true)
 public class VoteServiceImpl implements VoteService {

@@ -2,6 +2,17 @@
 
 Requests to the API are made via the HTTP protocol with basic authorization. 
 POST and PUT request's content must be transferred in JSON format, the Content-Type header must be set to "application/json".
+
+## Sections
+
+- [_Profile_](#profile)
+
+- [_Restaurant_](#restaurant)
+
+- [_Menu_](#menu)
+
+- [_Vote_](#vote)
+
 #### Basic authorization (Base64)
 
     "admin@yandex.ru:pass"          "YWRtaW5AeWFuZGV4LnJ1OnBhc3M="     
@@ -122,6 +133,8 @@ HTTP status codes:
 | --- | --- | --- |
 | 204 | No Content |
 | 401 | Unauthorized |
+
+[↑ sections](#sections)
 
 ## Restaurant
 
@@ -290,7 +303,66 @@ HTTP status codes:
 | 204 | No Content | Normal status |
 | 422 | Unprocessable Entity | Not found entity |
 
+[↑ sections](#sections)
+
 ## Menu
+
+#### Create menu
+***
+
+method: `POST`
+
+path: `/rest/menus`
+
+    curl -s -X POST -d '{"name": "Гусли", "city": "Александров", "description": "Ресторан русской кухни"}' -H 'Content-Type:application/json;charset=UTF-8' -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M="  http://{hostname}/rest/restaurants
+
+Request:
+
+    {
+        "restaurantId": 10006,
+        "added": "2019-01-01",
+        "dishes": [
+            {
+                "name": "Ролл1",
+                "price": 270.15
+            },
+            {
+                "name": "Ролл2",
+                "price": 180.55
+            }
+        ]
+    }
+    
+Response:
+
+    {
+        "id": 10025,
+        "added": "2019-01-01",
+        "dishes": [
+            {
+                "id": 10026,
+                "name": "Ролл1",
+                "price": 270.15
+            },
+            {
+                "id": 10027,
+                "name": "Ролл2",
+                "price": 180.55
+            }
+        ]
+    }
+
+Response headers:
+
+    Location http://localhost:8080/rest/menus/10025
+
+HTTP status codes:
+
+| Code | Status | Description |
+| --- | --- | --- |
+| 201 | Created | Menu created with location
+| 409 | Conflict | Menu for that date is exist
+| 422 | Unprocessable Entity | Any fields is not valid
 
 #### Get all menus
 ***
@@ -340,6 +412,8 @@ HTTP status codes:
 
 #### Get menu
 ***
+
+
 
 method: `GET`
 
@@ -477,9 +551,9 @@ HTTP status codes:
 
 | Code | Status | Description |
 | --- | --- | --- |
-| 204 | No Content |
-| 409 | Conflict |
-| 422 | Unprocessable Entity |
+| 204 | No Content | Normal status
+| 409 | Conflict | 
+| 422 | Unprocessable Entity | Any fields is not valid
 
 
 #### Delete menu
@@ -497,3 +571,57 @@ HTTP status codes:
 | --- | --- | --- |
 | 204 | No Content | Normal status |
 | 422 | Unprocessable Entity | Not found entity |
+
+[↑ sections](#sections)
+
+## Vote
+
+#### Vote for restaurant
+***
+
+method: `POST`
+
+path: `/rest/vote/{restaurantId}`
+
+    curl -s -X POST -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M=" http://{hostname}/rest/vote/{restaurantId}
+
+HTTP status codes:
+
+| Code | Status | Description |
+| --- | --- | --- |
+| 204 | No Content | Normal status |
+| 409 | Conflict | Restaurant not found |
+| 412 | Precondition Failed | Vote time is expired |
+
+#### Get all of auth User
+***
+
+method: `GET`
+
+path: `/rest/votes`
+
+    curl -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M=" http://{hostname}/rest/votes
+
+
+response:
+
+    [
+        {
+            "id": 10022,
+            "date": "2019-01-02",
+            "userEmail": "admin@yandex.ru",
+            "restaurant": {
+                "id": 10006,
+                "name": "KFC3",
+                "city": "Москва",
+                "description": "Куриные бургеры и картошка",
+                "added": "2019-01-02",
+                "menus": null
+            }
+        },
+        
+        ...
+        
+    ]
+
+[↑ sections](#sections)

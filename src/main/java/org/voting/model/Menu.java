@@ -21,7 +21,6 @@ public class Menu extends AbstractBaseEntity {
     @Column(name = "ADDED")
     private LocalDate added;
 
-    //TODO вытаскиваем меню с едой
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu")
     @OrderBy("name ASC")

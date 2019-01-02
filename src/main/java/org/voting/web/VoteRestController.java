@@ -1,6 +1,7 @@
 package org.voting.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.voting.model.Vote;
@@ -24,6 +25,7 @@ public class VoteRestController {
     }
 
     @PostMapping("/{restaurantId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void vote(@PathVariable("restaurantId") Integer restaurantId) {
         String username = SecurityUtil.getAuthUsername();
         voteService.vote(restaurantId, username);

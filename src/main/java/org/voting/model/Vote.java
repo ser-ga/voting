@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Table(name = "votes")
 public class Vote extends AbstractBaseEntity {
 
-    //хранить будем только дату голосования, время 11-00 будем только проверять
     @NotNull
     @Column(name = "DATE")
     private LocalDate date = LocalDate.now();

@@ -32,7 +32,8 @@ class VoteRestControllerTest extends AbstractControllerTest {
     void testVote() throws Exception {
         increaseVoteTime();
         mockMvc.perform(post(REST_URL + RESTAURANT1_ID)
-                .with(userHttpBasic(USER1)));
+                .with(userHttpBasic(USER1)))
+                .andExpect(status().isNoContent());
 
         List<Vote> actual = voteService.getAll(USER1.getEmail());
         assertEquals(1, actual.size());
