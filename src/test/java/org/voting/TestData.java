@@ -14,7 +14,10 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -95,15 +98,6 @@ public class TestData {
         return List.of(MENU1, MENU2, MENU3).stream()
                 .map(MenuTo::fromMenu)
                 .collect(Collectors.toList());
-    }
-
-    public static List<MenuTo> getAllMenuTo(Collection<Menu> menus) {
-        if (menus != null) {
-            return menus.stream()
-                    .map(MenuTo::fromMenu)
-                    .collect(Collectors.toList());
-        }
-        return null;
     }
 
     public static List<Dish> getNewDishes() {

@@ -58,9 +58,9 @@ HTTP status codes:
 
 | Code | Status | Description |
 | --- | --- | --- |
-| 201 | Created |
-| 409 | Conflict |
-| 422 | Unprocessable Entity |
+| 201 | Created | Normal status |
+| 409 | Conflict | User exist |
+| 422 | Unprocessable Entity | Any fields is not valid |
 
 #### Get user profile
 ***
@@ -88,7 +88,7 @@ HTTP status codes:
 | Code | Status | Description |
 | --- | --- | --- |
 | 200 | OK |
-| 401 | Unauthorized |
+| 401 | Unauthorized | 
 
 #### Update user profile
 ***
@@ -112,10 +112,10 @@ HTTP status codes:
 
 | Code | Status | Description |
 | --- | --- | --- |
-| 204 | No Content |
+| 204 | No Content | Normal status |
 | 401 | Unauthorized |
-| 409 | Conflict |
-| 422 | Unprocessable Entity |
+| 409 | Conflict | User email exist |
+| 422 | Unprocessable Entity | Any fields is not valid |
 
 
 #### Delete profile 
@@ -256,7 +256,7 @@ HTTP status codes:
 | Code | Status | Description |
 | --- | --- | --- |
 | 201 | Created |
-| 409 | Conflict |
+| 409 | Conflict | Restaurant with this name and city is exist
 | 422 | Unprocessable Entity |
 
 
