@@ -23,12 +23,14 @@ public class MenuServiceImpl implements MenuService {
     private final RestaurantRepository restaurantRepository;
     private final MenuRepository menuRepository;
     private final DishRepository dishRepository;
+    private final MenuService menuService;
 
     @Autowired
-    public MenuServiceImpl(RestaurantRepository restaurantRepository, MenuRepository menuRepository, DishRepository dishRepository) {
+    public MenuServiceImpl(RestaurantRepository restaurantRepository, MenuRepository menuRepository, DishRepository dishRepository, MenuService menuService) {
         this.restaurantRepository = restaurantRepository;
         this.menuRepository = menuRepository;
         this.dishRepository = dishRepository;
+        this.menuService = menuService;
     }
 
     @Override
@@ -67,7 +69,7 @@ public class MenuServiceImpl implements MenuService {
         if (!menu.getDishes().isEmpty()) {
             if (menuRepository.delete(menu.getId()) == 1) {
                 menu.setId(null);
-                return create(menu, restaurantId);
+                return menuService.create(menu, restaurantId);
             }
         }
         return null;
