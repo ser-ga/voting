@@ -47,7 +47,6 @@ public class ProfileRestController {
         userRepository.deleteByEmail(SecurityUtil.getAuthUsername());
     }
 
-    //TODO проверить валидацию
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<User> register(@Validated(View.Web.class) @RequestBody User user) {

@@ -26,4 +26,9 @@ public class VoteTime {
     public static void restore() {
         time = LocalTime.of(hour, minute);
     }
+
+    @Override
+    public String toString() {
+        return getTime().toString();
+    }
 }

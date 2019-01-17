@@ -23,14 +23,15 @@ public class MenuServiceImpl implements MenuService {
     private final RestaurantRepository restaurantRepository;
     private final MenuRepository menuRepository;
     private final DishRepository dishRepository;
-    private final MenuService menuService;
 
     @Autowired
-    public MenuServiceImpl(RestaurantRepository restaurantRepository, MenuRepository menuRepository, DishRepository dishRepository, MenuService menuService) {
+    private MenuService menuService;
+
+    @Autowired
+    public MenuServiceImpl(RestaurantRepository restaurantRepository, MenuRepository menuRepository, DishRepository dishRepository) {
         this.restaurantRepository = restaurantRepository;
         this.menuRepository = menuRepository;
         this.dishRepository = dishRepository;
-        this.menuService = menuService;
     }
 
     @Override
