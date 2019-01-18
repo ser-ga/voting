@@ -581,9 +581,13 @@ HTTP status codes:
 
 method: `POST`
 
-path: `/rest/vote/{restaurantId}`
+path: `/rest/votes/for`
 
-    curl -s -X POST -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M=" http://{hostname}/rest/vote/{restaurantId}
+| Request param | type | required | example |
+| --- | --- | --- | --- |
+| **restaurantId** | Number | true | 10006 |
+
+    curl -s -X POST -H "Authorization: Basic YWRtaW5AeWFuZGV4LnJ1OnBhc3M=" http://{hostname}/rest/votes/for?restaurantId=10006
 
 HTTP status codes:
 

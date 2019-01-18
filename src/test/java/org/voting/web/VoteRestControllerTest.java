@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.voting.TestData.*;
 
@@ -31,9 +32,10 @@ class VoteRestControllerTest extends AbstractControllerTest {
     @Test
     void testVote() throws Exception {
         increaseVoteTime();
-        mockMvc.perform(post(REST_URL + RESTAURANT1_ID)
+        mockMvc.perform(post(REST_URL + "for?restaurantId=" + RESTAURANT1_ID)
                 .with(userHttpBasic(USER1)))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andDo(print());
 
         List<Vote> actual = voteService.getAll(USER1.getEmail());
         assertEquals(1, actual.size());
@@ -47,7 +49,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     void testVoteInvalid() throws Exception {
         increaseVoteTime();
-        mockMvc.perform(post(REST_URL + 1)
+        mockMvc.perform(post(REST_URL + "for?restaurantId=" + 1)
                 .with(userHttpBasic(USER1)))
                 .andExpect(status().isConflict());
     }

@@ -24,15 +24,15 @@ public class VoteRestController {
         this.voteService = voteService;
     }
 
-    @PostMapping("/{restaurantId}")
+    @PostMapping(value = "/for")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void vote(@PathVariable("restaurantId") Integer restaurantId) {
+    public void vote(@RequestParam("restaurantId") Integer restaurantId) {
         String username = SecurityUtil.getAuthUsername();
         voteService.vote(restaurantId, username);
     }
 
     @GetMapping
-    public List<Vote> getAll(){
+    public List<Vote> getAll() {
         String username = SecurityUtil.getAuthUsername();
         return voteService.getAll(username);
     }

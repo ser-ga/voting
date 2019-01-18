@@ -1,6 +1,5 @@
 package org.voting.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Filter;
 import org.hibernate.validator.constraints.SafeHtml;
@@ -36,10 +35,6 @@ public class Restaurant extends AbstractNamedEntity {
     @OrderBy("added DESC")
     @Filter(name="added", condition = "added = :added")
     private List<Menu> menus = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    private List<Vote> votes;
 
     public Restaurant() {
     }
@@ -80,14 +75,6 @@ public class Restaurant extends AbstractNamedEntity {
 
     public void setMenus(List<Menu> menus) {
         this.menus = menus;
-    }
-
-    public List<Vote> getVotes() {
-        return votes;
-    }
-
-    public void setVotes(List<Vote> votes) {
-        this.votes = votes;
     }
 
     @Override
