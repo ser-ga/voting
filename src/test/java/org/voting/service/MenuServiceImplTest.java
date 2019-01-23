@@ -2,6 +2,7 @@ package org.voting.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.voting.model.Menu;
 import org.voting.util.exception.IllegalRequestDataException;
 import org.voting.util.exception.NotFoundException;
@@ -80,7 +81,7 @@ class MenuServiceImplTest extends AbstractServiceTest {
 
     @Test
     void testDeleteNotFound() throws Exception {
-        assertThrows(NotFoundException.class, () -> menuService.delete(1));
+        assertThrows(EmptyResultDataAccessException.class, () -> menuService.delete(1));
     }
 
     @Test

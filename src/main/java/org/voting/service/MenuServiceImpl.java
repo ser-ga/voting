@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.voting.util.ValidationUtil.checkNew;
-import static org.voting.util.ValidationUtil.checkNotFound;
 
 @Service
 @Transactional(readOnly = true)
@@ -38,9 +37,9 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     public Menu create(Menu menu, int restaurantId) {
         checkNew(menu);
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
-        checkNotFound(restaurant, "Not found restaurant with id=" + restaurantId);
-
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
+                () -> new NotFoundException("Not found restaurant with id=" + restaurantId)
+        );
         menu.setRestaurant(restaurant);
         Menu created = menuRepository.saveAndFlush(menu);
         menu.getDishes().forEach(e -> {
@@ -53,8 +52,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public Menu getById(int id) {
-        Menu menu = menuRepository.findById(id).orElse(null);
-        return checkNotFound(menu, "Not found menu with id=" + id);
+        return menuRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found menu with id=" + id));
     }
 
     @Override
@@ -66,7 +64,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional
     public Menu update(Menu menu, int restaurantId) {
-        checkNotFound(menuRepository.findById(menu.getId()).orElse(null), "Not found menu with id=" + menu.getId());
+        menuRepository.findById(menu.getId()).orElseThrow(() -> new NotFoundException("Not found menu with id=" + menu.getId()));
         if (!menu.getDishes().isEmpty()) {
             if (menuRepository.delete(menu.getId()) == 1) {
                 menu.setId(null);
@@ -79,7 +77,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Transactional
     public void delete(int id) {
-        if (menuRepository.delete(id) == 0) throw new NotFoundException("Not found menu with id=" + id);
+        menuRepository.deleteById(id);
     }
 
     @Override
