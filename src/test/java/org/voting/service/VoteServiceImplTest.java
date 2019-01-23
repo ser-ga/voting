@@ -40,7 +40,10 @@ public class VoteServiceImplTest extends AbstractServiceTest {
     @Test
     void voteTimeTest() {
         expireVoteTime();
+        // first vote
+        service.vote(RESTAURANT1_ID, USER1.getEmail());
+        // changed mind
         assertThrows(VoteException.class, () ->
-                service.vote(RESTAURANT1_ID, USER1.getEmail()));
+                service.vote(RESTAURANT4.getId(), USER1.getEmail()));
     }
 }

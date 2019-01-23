@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.voting.model.Restaurant;
 import org.voting.model.Vote;
 import org.voting.repository.VoteRepository;
@@ -17,7 +16,6 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 public class VoteServiceImpl implements VoteService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VoteServiceImpl.class);
@@ -36,16 +34,15 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    @Transactional
     public void vote(int restaurantId, String email) {
-        if (LocalTime.now().isAfter(VoteTime.getTime())) {
-            throw new VoteException("Time for vote expired at " + voteTime + " by server time");
+        LOGGER.info("{} vote for restaurant with id {}", email, restaurantId);
+        Vote vote = voteRepository.findByUserEmailAndDate(email, LocalDate.now());
+
+        if (vote != null && restaurantId != vote.getRestaurant().getId() && LocalTime.now().isAfter(VoteTime.getTime())) {
+            throw new VoteException("Time for change vote expired at " + voteTime + " by server time");
         }
 
-        LOGGER.info("{} vote for restaurant with id {}", email, restaurantId);
-
         Restaurant restaurant = restaurantRepository.getOne(restaurantId);
-        Vote vote = voteRepository.findByUserEmailAndDate(email, LocalDate.now());
         if (vote == null) {
             vote = new Vote();
             vote.setUserEmail(email);
