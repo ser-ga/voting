@@ -14,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "menus")
-@FilterDef(name="added", parameters=@ParamDef(name="added",type="java.time.LocalDate"))
+@FilterDef(name = "added", parameters = @ParamDef(name = "added", type = "java.time.LocalDate"))
 public class Menu extends AbstractBaseEntity {
 
     @NotNull
@@ -22,7 +22,7 @@ public class Menu extends AbstractBaseEntity {
     private LocalDate added;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("name ASC")
     private List<Dish> dishes;
 
@@ -54,6 +54,16 @@ public class Menu extends AbstractBaseEntity {
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+    }
+
+    public void addDish(Dish dish) {
+        dishes.add(dish);
+        dish.setMenu(this);
+    }
+
+    public void removeDish(Dish dish) {
+        dishes.remove(dish);
+        dish.setMenu(null);
     }
 
     public Menu() {

@@ -3,11 +3,14 @@ package org.voting.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.voting.model.Menu;
 import org.voting.util.exception.IllegalRequestDataException;
 import org.voting.util.exception.NotFoundException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -22,7 +25,8 @@ class MenuServiceImplTest extends AbstractServiceTest {
 
     @Test
     void testCreate() {
-        Menu created = new Menu(null, LocalDate.now(), getNewDishes(), RESTAURANT1);
+        Menu created = new Menu(null, LocalDate.now(), new ArrayList<>(), RESTAURANT1);
+        getNewDishes().forEach(created::addDish);
         menuService.create(created, RESTAURANT1_ID);
         assertMatch(menuService.getAll(), List.of(MENU1, MENU2, MENU3, created), FIELDS_RESTAURANT_AND_DISHES);
     }
@@ -59,12 +63,13 @@ class MenuServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
     void testUpdate() {
-        Menu updated = new Menu(MENU3.getId(), LocalDate.now(), getNewDishes(), RESTAURANT3);
+        Menu updated = new Menu(MENU3.getId(), LocalDate.now(), new ArrayList<>(), RESTAURANT3);
+        getNewDishes().forEach(updated::addDish);
         Menu actual = menuService.update(updated, RESTAURANT3.getId());
-        updated.setId(actual.getId());
         assertMatch(actual, updated, FIELDS_RESTAURANT_AND_DISHES);
-        assertMatch(actual.getDishes(), updated.getDishes(), FIELD_MENU);
+        assertMatch(actual.getDishes(), updated.getDishes(), FIELD_ID, FIELD_MENU);
     }
 
     @Test

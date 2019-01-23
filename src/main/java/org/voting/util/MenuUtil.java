@@ -4,11 +4,14 @@ import org.voting.model.Menu;
 import org.voting.to.MenuTo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class MenuUtil {
 
     public static Menu createFromTo(MenuTo menuTo) {
-        return new Menu(menuTo.getId(), menuTo.getAdded() == null ? LocalDate.now() : menuTo.getAdded(),menuTo.getDishes(),null);
+        Menu menu = new Menu(menuTo.getId(), menuTo.getAdded() == null ? LocalDate.now() : menuTo.getAdded(), new ArrayList<>(), null);
+        menuTo.getDishes().forEach(menu::addDish);
+        return menu;
     }
 
     public static MenuTo asTo(Menu menu) {

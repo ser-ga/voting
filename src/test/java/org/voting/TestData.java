@@ -58,6 +58,7 @@ public class TestData {
     public static final Dish DISH7 = new Dish(DISH1_ID + 6, "1Пицца", BigDecimal.valueOf(279.49));
     public static final Dish DISH8 = new Dish(DISH1_ID + 7, "2Пицца", BigDecimal.valueOf(279.49));
 
+    public static final String FIELD_ID = "id";
     public static final String FIELD_MENU = "menu";
 
     public static final int MENU1_ID = START_SEQ + 10;
