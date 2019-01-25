@@ -4,15 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.voting.AuthorizedUser;
 import org.voting.View;
 import org.voting.model.Role;
 import org.voting.model.User;
 import org.voting.repository.UserRepository;
-import org.voting.util.SecurityUtil;
 
 import java.net.URI;
 import java.util.Collections;
@@ -37,14 +38,16 @@ public class ProfileRestController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public User get() {
-        return userRepository.getByEmail(SecurityUtil.getAuthUsername());
+    public User get(Authentication authentication) {
+        AuthorizedUser authorizedUser = (AuthorizedUser) authentication.getPrincipal();
+        return authorizedUser.getUser();
     }
 
     @DeleteMapping
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete() {
-        userRepository.deleteByEmail(SecurityUtil.getAuthUsername());
+    public void delete(Authentication authentication) {
+        AuthorizedUser authorizedUser = (AuthorizedUser) authentication.getPrincipal();
+        userRepository.deleteById(authorizedUser.getId());
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -63,13 +66,10 @@ public class ProfileRestController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@Validated(View.Web.class) @RequestBody User user) {
-        User stored = userRepository.getByEmail(SecurityUtil.getAuthUsername());
-        assureIdConsistent(user, stored.getId());
+    public void update(@Validated(View.Web.class) @RequestBody User user, Authentication authentication) {
+        AuthorizedUser authorizedUser = (AuthorizedUser) authentication.getPrincipal();
+        assureIdConsistent(user, authorizedUser.getId());
         prepareToSave(user, passwordEncoder);
-        stored.setEmail(user.getEmail());
-        stored.setPassword(user.getPassword());
-        stored.setName(user.getName());
-        userRepository.save(stored);
+        userRepository.save(user);
     }
 }
