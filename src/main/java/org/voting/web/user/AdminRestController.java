@@ -11,7 +11,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.voting.View;
 import org.voting.model.User;
 import org.voting.repository.UserRepository;
-import org.voting.util.exception.NotFoundException;
 
 import java.net.URI;
 import java.util.List;
@@ -59,7 +58,7 @@ public class AdminRestController {
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Integer id) {
-        if (userRepository.removeById(id) == 0) throw new NotFoundException("User not found with ID=" + id);
+        userRepository.deleteById(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

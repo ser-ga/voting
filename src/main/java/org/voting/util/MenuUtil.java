@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class MenuUtil {
 
+    private MenuUtil(){}
+
     public static Menu createFromTo(MenuTo menuTo) {
         Menu menu = new Menu(menuTo.getId(), menuTo.getAdded() == null ? LocalDate.now() : menuTo.getAdded(), new ArrayList<>(), null);
         menuTo.getDishes().forEach(menu::addDish);

@@ -61,7 +61,7 @@ public class RestaurantRestController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@PathVariable("id") Integer id, @Validated(View.Web.class) @RequestBody Restaurant restaurant) {
         assureIdConsistent(restaurant, id);
-        Restaurant found = checkNotFound(restaurantRepository.findById(id).orElse(null), "Restaurant not found for ID " + id);
+        Restaurant found = restaurantRepository.findById(id).orElseThrow(() -> new NotFoundException("Restaurant not found for ID " + id));
         found.setName(restaurant.getName());
         found.setCity(restaurant.getCity());
         found.setDescription(restaurant.getDescription());
@@ -72,8 +72,7 @@ public class RestaurantRestController {
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Integer id) {
-        if (restaurantRepository.removeById(id) != 1) throw new NotFoundException("Restaurant not found for ID " + id);
+        restaurantRepository.deleteById(id);
     }
-
 
 }
